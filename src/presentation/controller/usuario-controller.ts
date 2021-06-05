@@ -1,5 +1,6 @@
 import { Usuario } from '../../entities/usecases'
-import { badRequest, serverError } from '../helpers'
+import { EmailInUseError } from '../errors'
+import { badRequest, forbidden, serverError } from '../helpers'
 import { Controller, HttpResponse, Validation } from '../protocols'
 
 export class UsuarioController implements Controller {
@@ -14,7 +15,10 @@ export class UsuarioController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.usuario.add(request)
+      const isValid = await this.usuario.add(request)
+      if (!isValid) {
+        return forbidden(new EmailInUseError())
+      }
       return null
     } catch {
       return serverError()
