@@ -1,7 +1,7 @@
 import { UsuarioController } from './usuario-controller'
 import { Usuario } from '../../entities/usecases'
 import { Validation } from '../protocols'
-import { badRequest } from '../helpers'
+import { badRequest, serverError } from '../helpers'
 import { MissingParamError } from '../errors'
 
 import faker from 'faker'
@@ -71,5 +71,12 @@ describe('SignUp Controller', () => {
     const request = mockAddAccountParams()
     await sut.handle(request)
     expect(usuarioSpy.user).toEqual(request)
+  })
+
+  test('Deve retornar erro 500 se AddAccount arremessar um erro', async () => {
+    const { sut, usuarioSpy } = makeSut()
+    jest.spyOn(usuarioSpy, 'add').mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle(mockAddAccountParams())
+    expect(httpResponse).toEqual(serverError())
   })
 })
