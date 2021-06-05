@@ -10,8 +10,7 @@ export class DbAddUser implements Usuario {
 
   async add (user: Usuario.Params): Promise<Usuario.Response> {
     const hashedSenha = await this.hasher.hash(user.senha)
-    console.log(hashedSenha)
-    await this.addUserRepository.add({ ...user, senha: hashedSenha })
-    return null
+    const isValid = await this.addUserRepository.add({ ...user, senha: hashedSenha })
+    return isValid
   }
 }
