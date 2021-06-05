@@ -3,6 +3,7 @@ import { Hasher } from '../protocols'
 import { Usuario } from '../../entities/usecases'
 
 import faker from 'faker'
+import { AddUserRepository } from '../protocols/db'
 
 class HasherSpy implements Hasher {
   senha: string
@@ -10,6 +11,16 @@ class HasherSpy implements Hasher {
 
   async hash (senha: string): Promise<string> {
     this.senha = senha
+    return this.response
+  }
+}
+
+class AddUserRepositorySpy implements AddUserRepository {
+  user: AddUserRepository.Params
+  response = true
+
+  async add (user: AddUserRepository.Params): Promise<AddUserRepository.Response> {
+    this.user = user
     return this.response
   }
 }
@@ -24,14 +35,17 @@ const mockAddAccountParams = (): Usuario.Params => ({
 type SutTypes = {
   sut: DbAddUser
   hasherSpy: HasherSpy
+  addUserRepositorySpy: AddUserRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const hasherSpy = new HasherSpy()
-  const sut = new DbAddUser(hasherSpy)
+  const addUserRepositorySpy = new AddUserRepositorySpy()
+  const sut = new DbAddUser(hasherSpy, addUserRepositorySpy)
   return {
     sut,
-    hasherSpy
+    hasherSpy,
+    addUserRepositorySpy
   }
 }
 
@@ -46,6 +60,25 @@ describe('DbAddUsuario Caso de uso', () => {
   test('Deve retornar erro de Hasher se retornar erro', async () => {
     const { sut, hasherSpy } = makeSut()
     jest.spyOn(hasherSpy, 'hash').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.add(mockAddAccountParams())
+    await expect(promise).rejects.toThrow()
+  })
+
+  test('Deve chamar AddUserRepository com os valores corretos', async () => {
+    const { sut, addUserRepositorySpy, hasherSpy } = makeSut()
+    const addAccountParams = mockAddAccountParams()
+    await sut.add(addAccountParams)
+    expect(addUserRepositorySpy.user).toEqual({
+      nomeCompleto: addAccountParams.nomeCompleto,
+      cpf: addAccountParams.cpf,
+      email: addAccountParams.email,
+      senha: hasherSpy.response
+    })
+  })
+
+  test('Deve retornar erro de AddUserRepository se retornar erro', async () => {
+    const { sut, addUserRepositorySpy } = makeSut()
+    jest.spyOn(addUserRepositorySpy, 'add').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.add(mockAddAccountParams())
     await expect(promise).rejects.toThrow()
   })
