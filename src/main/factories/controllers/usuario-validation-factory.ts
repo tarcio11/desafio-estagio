@@ -2,7 +2,7 @@ import { Validation } from '../../../presentation/protocols'
 import { CpfValidation, EmailValidation, RequiredFieldValidation, ValidationComposite } from '../../../validation'
 import { CpfValidatorAdapter, EmailValidatorAdapter } from '../../../external/validators'
 
-export const makeSignUpValidation = (): ValidationComposite => {
+export const makeUsuarioValidation = (): ValidationComposite => {
   const validations: Validation[] = []
   for (const field of ['name', 'cpf', 'email', 'password']) {
     validations.push(new RequiredFieldValidation(field))

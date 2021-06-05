@@ -1,4 +1,4 @@
-import { makeSignUpValidation } from './signup-validation-factory'
+import { makeUsuarioValidation } from './usuario-validation-factory'
 import { Validation } from '../../../presentation/protocols'
 import { EmailValidation, RequiredFieldValidation, ValidationComposite } from '../../../validation'
 import { CpfValidatorAdapter, EmailValidatorAdapter } from '../../../external/validators'
@@ -8,7 +8,7 @@ jest.mock('../../../validation/validation-composite')
 
 describe('SignupValidation Factory', () => {
   test('Deve chamar ValidationComposite com todas as validações', () => {
-    makeSignUpValidation()
+    makeUsuarioValidation()
     const validations: Validation[] = []
     for (const field of ['name', 'cpf', 'email', 'password']) {
       validations.push(new RequiredFieldValidation(field))
