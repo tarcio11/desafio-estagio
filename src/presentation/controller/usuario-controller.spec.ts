@@ -1,7 +1,7 @@
 import { UsuarioController } from './usuario-controller'
 import { Usuario } from '../../entities/usecases'
 import { Validation } from '../protocols'
-import { badRequest, forbidden, serverError } from '../helpers'
+import { badRequest, forbidden, ok, serverError } from '../helpers'
 import { EmailInUseError, MissingParamError } from '../errors'
 
 import faker from 'faker'
@@ -85,5 +85,11 @@ describe('SignUp Controller', () => {
     usuarioSpy.response = false
     const httpResponse = await sut.handle(mockAddAccountParams())
     expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
+  })
+
+  test('Deve retornar 200 se credenciais válidas forem fornecidas', async () => {
+    const { sut, usuarioSpy } = makeSut()
+    const httpResponse = await sut.handle(mockAddAccountParams())
+    expect(httpResponse).toEqual(ok(usuarioSpy.response))
   })
 })
