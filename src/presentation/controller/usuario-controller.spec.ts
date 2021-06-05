@@ -1,9 +1,11 @@
 import { UsuarioController } from './usuario-controller'
 import { Usuario } from '../../entities/usecases'
+import { Validation } from '../protocols'
+import { badRequest } from '../helpers'
+import { MissingParamError } from '../errors'
 
 import faker from 'faker'
 import { cpf } from 'cpf-cnpj-validator'
-import { Validation } from '../protocols'
 
 export class ValidationSpy implements Validation {
   input: any
@@ -42,5 +44,12 @@ describe('SignUp Controller', () => {
     const request = mockAddAccountParams()
     await sut.handle(request)
     expect(validationSpy.input).toEqual(request)
+  })
+
+  test('Deve retornar erro 400 se Validation retornar um erro', async () => {
+    const { sut, validationSpy } = makeSut()
+    validationSpy.error = new MissingParamError(faker.random.word())
+    const httpResponse = await sut.handle(mockAddAccountParams())
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
 })
