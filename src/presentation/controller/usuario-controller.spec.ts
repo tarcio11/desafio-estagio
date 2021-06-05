@@ -1,8 +1,8 @@
 import { UsuarioController } from './usuario-controller'
 import { Usuario } from '../../entities/usecases'
 import { Validation } from '../protocols'
-import { badRequest, serverError } from '../helpers'
-import { MissingParamError } from '../errors'
+import { badRequest, forbidden, serverError } from '../helpers'
+import { EmailInUseError, MissingParamError } from '../errors'
 
 import faker from 'faker'
 import { cpf } from 'cpf-cnpj-validator'
@@ -78,5 +78,12 @@ describe('SignUp Controller', () => {
     jest.spyOn(usuarioSpy, 'add').mockImplementationOnce(() => { throw new Error() })
     const httpResponse = await sut.handle(mockAddAccountParams())
     expect(httpResponse).toEqual(serverError())
+  })
+
+  test('Deve retornar erro 403 se AddAccount retornar falso', async () => {
+    const { sut, usuarioSpy } = makeSut()
+    usuarioSpy.response = false
+    const httpResponse = await sut.handle(mockAddAccountParams())
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
 })
