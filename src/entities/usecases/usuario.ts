@@ -5,7 +5,7 @@ export interface Usuario {
 export namespace Usuario {
   export type Params = {
     nomeCompleto: string
-    cpf: string
+    cpf: number
     email: string
     senha: string
   }
