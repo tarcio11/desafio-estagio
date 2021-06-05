@@ -7,6 +7,7 @@
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
-    "import/export": "off"
+    "import/export": "off",
+    "@typescript-eslint/no-misused-promises": "off"
   }
 }
