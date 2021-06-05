@@ -38,4 +38,11 @@ describe('Email Validation', () => {
     const error = sut.validate({ [field]: email })
     expect(error).toEqual(new InvalidParamError(field))
   })
+
+  test('Deve chamar EmailValidator com email correto', () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    const email = faker.internet.email()
+    sut.validate({ [field]: email })
+    expect(emailValidatorSpy.email).toBe(email)
+  })
 })
