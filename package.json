@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cpf-cnpj-validator": "^1.0.3",
     "mongodb": "^3.6.9",
     "validator": "^13.6.0"
   }
