@@ -32,6 +32,14 @@ describe('UserMongoRepository', () => {
     await accountCollection.deleteMany({})
   })
 
+  describe('add()', () => {
+    test('Deve retorna um Usuario em caso de sucesso', async () => {
+      const sut = makeSut()
+      const isValid = await sut.add(mockAddAccountParams())
+      expect(isValid).toBe(true)
+    })
+  })
+
   describe('checkByEmail()', () => {
     test('Deve retorna verdadeiro se email for valido', async () => {
       const sut = makeSut()
