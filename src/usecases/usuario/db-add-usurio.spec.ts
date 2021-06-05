@@ -1,9 +1,9 @@
 import { DbAddUser } from './db-add-usurio'
 import { Hasher } from '../protocols'
+import { AddUserRepository, CheckUserByEmailRepository } from '../protocols/db'
 import { Usuario } from '../../entities/usecases'
 
 import faker from 'faker'
-import { AddUserRepository } from '../protocols/db'
 
 class HasherSpy implements Hasher {
   senha: string
@@ -25,6 +25,16 @@ class AddUserRepositorySpy implements AddUserRepository {
   }
 }
 
+class CheckUserByEmailRepositorySpy implements CheckUserByEmailRepository {
+  email: string
+  response = true
+
+  async checkByEmail (email: string): Promise<CheckUserByEmailRepository.Response> {
+    this.email = email
+    return this.response
+  }
+}
+
 const mockAddAccountParams = (): Usuario.Params => ({
   nomeCompleto: faker.name.findName(),
   cpf: faker.random.number(11),
@@ -36,16 +46,19 @@ type SutTypes = {
   sut: DbAddUser
   hasherSpy: HasherSpy
   addUserRepositorySpy: AddUserRepositorySpy
+  checkUserByEmailRepositorySpy: CheckUserByEmailRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const hasherSpy = new HasherSpy()
   const addUserRepositorySpy = new AddUserRepositorySpy()
-  const sut = new DbAddUser(hasherSpy, addUserRepositorySpy)
+  const checkUserByEmailRepositorySpy = new CheckUserByEmailRepositorySpy()
+  const sut = new DbAddUser(hasherSpy, addUserRepositorySpy, checkUserByEmailRepositorySpy)
   return {
     sut,
     hasherSpy,
-    addUserRepositorySpy
+    addUserRepositorySpy,
+    checkUserByEmailRepositorySpy
   }
 }
 
@@ -94,5 +107,12 @@ describe('DbAddUsuario Caso de uso', () => {
     addUserRepositorySpy.response = false
     const isValid = await sut.add(mockAddAccountParams())
     expect(isValid).toBe(false)
+  })
+
+  test('Deve chamar CheckUserByEmailRepository com o email correto', async () => {
+    const { sut, checkUserByEmailRepositorySpy } = makeSut()
+    const addAccountParams = mockAddAccountParams()
+    await sut.add(addAccountParams)
+    expect(checkUserByEmailRepositorySpy.email).toBe(addAccountParams.email)
   })
 })
