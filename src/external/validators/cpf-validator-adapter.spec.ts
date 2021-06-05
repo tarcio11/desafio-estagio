@@ -21,4 +21,10 @@ describe('EmailValidatorAdapter', () => {
     const isValid = sut.isValid(Number(cpf.generate()))
     expect(isValid).toBe(false)
   })
+
+  test('Deve retorna verdadeiro se cpf retornar verdadeiro', () => {
+    const sut = makeSut()
+    const isValid = sut.isValid(Number(cpf.generate()))
+    expect(isValid).toBe(true)
+  })
 })
