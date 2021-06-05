@@ -48,4 +48,10 @@ describe('Validation Composite', () => {
     const error = sut.validate({ [field]: faker.random.word() })
     expect(error).toEqual(validationSpies[0].error)
   })
+
+  test('Deve não retornar erro se a validação for bem-sucedida', () => {
+    const { sut } = makeSut()
+    const error = sut.validate({ [field]: faker.random.word() })
+    expect(error).toBeFalsy()
+  })
 })
