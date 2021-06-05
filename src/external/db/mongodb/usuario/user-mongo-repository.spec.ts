@@ -4,12 +4,13 @@ import { Usuario } from '../../../../entities/usecases'
 
 import { Collection } from 'mongodb'
 import faker from 'faker'
+import { cnpj } from 'cpf-cnpj-validator'
 
 let accountCollection: Collection
 
 const mockAddAccountParams = (): Usuario.Params => ({
   nomeCompleto: faker.name.findName(),
-  cpf: faker.random.number(11),
+  cpf: Number(cnpj.generate()),
   email: faker.internet.email(),
   senha: faker.internet.password()
 })

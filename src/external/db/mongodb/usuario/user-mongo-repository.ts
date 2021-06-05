@@ -3,9 +3,9 @@ import { MongoHelper } from '../helpers/mongo-helper'
 
 export class UserMongoRepository implements CheckUserByEmailRepository, AddUserRepository {
   async add (data: AddUserRepository.Params): Promise<AddUserRepository.Response> {
-    const accountCollection = await MongoHelper.getCollection('accounts')
-    const result = accountCollection.insertOne(data)
-    return (await result).ops[0] !== null
+    const accountCollection = await MongoHelper.getCollection('users')
+    const result = await accountCollection.insertOne(data)
+    return result.ops[0] !== null
   }
 
   async checkByEmail (email: string): Promise<boolean> {

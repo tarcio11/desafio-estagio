@@ -10,7 +10,7 @@ describe('SignupValidation Factory', () => {
   test('Deve chamar ValidationComposite com todas as validações', () => {
     makeUsuarioValidation()
     const validations: Validation[] = []
-    for (const field of ['name', 'cpf', 'email', 'password']) {
+    for (const field of ['nomeCompleto', 'cpf', 'email', 'senha']) {
       validations.push(new RequiredFieldValidation(field))
     }
     validations.push(new EmailValidation('email', new EmailValidatorAdapter()))

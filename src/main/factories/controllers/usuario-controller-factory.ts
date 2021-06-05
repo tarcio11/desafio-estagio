@@ -7,8 +7,8 @@ import { UserMongoRepository } from '../../../external/db/mongodb/usuario'
 
 export const makeUsuarioController = (): Controller => {
   const salt = 8
-  const bcrypt = new BcryptAdapter(salt)
+  const bcryptAdapter = new BcryptAdapter(salt)
   const userMongoRepository = new UserMongoRepository()
-  const usuario = new DbAddUser(bcrypt, userMongoRepository, userMongoRepository)
-  return new UsuarioController(makeUsuarioValidation(), usuario)
+  const dbAddUser = new DbAddUser(bcryptAdapter, userMongoRepository, userMongoRepository)
+  return new UsuarioController(makeUsuarioValidation(), dbAddUser)
 }

@@ -4,7 +4,7 @@ import { CpfValidatorAdapter, EmailValidatorAdapter } from '../../../external/va
 
 export const makeUsuarioValidation = (): ValidationComposite => {
   const validations: Validation[] = []
-  for (const field of ['name', 'cpf', 'email', 'password']) {
+  for (const field of ['nomeCompleto', 'cpf', 'email', 'senha']) {
     validations.push(new RequiredFieldValidation(field))
   }
   validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
