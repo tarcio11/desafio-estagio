@@ -12,7 +12,7 @@ export class DbAddUser implements Usuario {
   async add (user: Usuario.Params): Promise<Usuario.Response> {
     const exist = await this.checkUserByEmailRepository.checkByEmail(user.email)
     let isValid = false
-    if (exist) {
+    if (!exist) {
       const hashedSenha = await this.hasher.hash(user.senha)
       isValid = await this.addUserRepository.add({ ...user, senha: hashedSenha })
     }
