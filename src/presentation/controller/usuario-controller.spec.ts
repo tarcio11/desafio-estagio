@@ -17,9 +17,14 @@ export class ValidationSpy implements Validation {
   }
 }
 
-type SutTypes = {
-  sut: UsuarioController
-  validationSpy: ValidationSpy
+export class UsuarioSpy implements Usuario {
+  user: Usuario.Params
+  response = true
+
+  async add (user: Usuario.Params): Promise<Usuario.Response> {
+    this.user = user
+    return this.response
+  }
 }
 
 const mockAddAccountParams = (): Usuario.Params => ({
@@ -29,12 +34,20 @@ const mockAddAccountParams = (): Usuario.Params => ({
   senha: faker.internet.password()
 })
 
+type SutTypes = {
+  sut: UsuarioController
+  validationSpy: ValidationSpy
+  usuarioSpy: UsuarioSpy
+}
+
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
-  const sut = new UsuarioController(validationSpy)
+  const usuarioSpy = new UsuarioSpy()
+  const sut = new UsuarioController(validationSpy, usuarioSpy)
   return {
     sut,
-    validationSpy
+    validationSpy,
+    usuarioSpy
   }
 }
 
@@ -51,5 +64,12 @@ describe('SignUp Controller', () => {
     validationSpy.error = new MissingParamError(faker.random.word())
     const httpResponse = await sut.handle(mockAddAccountParams())
     expect(httpResponse).toEqual(badRequest(validationSpy.error))
+  })
+
+  test('Deve chamar Usuario com os valores corretos', async () => {
+    const { sut, usuarioSpy } = makeSut()
+    const request = mockAddAccountParams()
+    await sut.handle(request)
+    expect(usuarioSpy.user).toEqual(request)
   })
 })
