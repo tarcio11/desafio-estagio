@@ -82,4 +82,10 @@ describe('DbAddUsuario Caso de uso', () => {
     const promise = sut.add(mockAddAccountParams())
     await expect(promise).rejects.toThrow()
   })
+
+  test('Deve retornar verdadeiro em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const isValid = await sut.add(mockAddAccountParams())
+    expect(isValid).toBe(true)
+  })
 })
