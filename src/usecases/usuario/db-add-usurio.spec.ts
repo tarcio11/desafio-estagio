@@ -115,4 +115,11 @@ describe('DbAddUsuario Caso de uso', () => {
     await sut.add(addAccountParams)
     expect(checkUserByEmailRepositorySpy.email).toBe(addAccountParams.email)
   })
+
+  test('Deve retornar falso se CheckAccountByEmailRepository retornar verdadeiro', async () => {
+    const { sut, checkUserByEmailRepositorySpy } = makeSut()
+    checkUserByEmailRepositorySpy.response = false
+    const isValid = await sut.add(mockAddAccountParams())
+    expect(isValid).toBe(false)
+  })
 })
