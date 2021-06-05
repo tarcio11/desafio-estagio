@@ -38,4 +38,11 @@ describe('Email Validation', () => {
     const error = sut.validate({ [field]: cpf })
     expect(error).toEqual(new InvalidParamError(field))
   })
+
+  test('Deve chamar CpfValidator com cpf correto', () => {
+    const { sut, cpfValidatorSpy } = makeSut()
+    const cpf = '11111111111'
+    sut.validate({ [field]: cpf })
+    expect(cpfValidatorSpy.cpf).toBe(cpf)
+  })
 })
