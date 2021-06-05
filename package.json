@@ -6,6 +6,8 @@
   "author": "tarcio11 <tarcio_x@hotmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "git-commit-msg-linter": "^3.1.0"
+    "git-commit-msg-linter": "^3.1.0",
+    "husky": "^4.3.0",
+    "lint-staged": "^11.0.0"
   }
 }
