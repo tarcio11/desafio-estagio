@@ -14,4 +14,11 @@ describe('EmailValidatorAdapter', () => {
     sut.isValid(Number(fakeCPF))
     expect(isCPFSpy).toHaveBeenCalledWith(fakeCPF)
   })
+
+  test('Deve retorna falso se cpf retornar falso', () => {
+    const sut = makeSut()
+    jest.spyOn(cpf, 'isValid').mockReturnValueOnce(false)
+    const isValid = sut.isValid(Number(cpf.generate()))
+    expect(isValid).toBe(false)
+  })
 })
