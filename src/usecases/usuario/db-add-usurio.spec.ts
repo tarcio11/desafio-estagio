@@ -88,4 +88,11 @@ describe('DbAddUsuario Caso de uso', () => {
     const isValid = await sut.add(mockAddAccountParams())
     expect(isValid).toBe(true)
   })
+
+  test('Deve retorna falso se AddUserRepository retornar falso', async () => {
+    const { sut, addUserRepositorySpy } = makeSut()
+    addUserRepositorySpy.response = false
+    const isValid = await sut.add(mockAddAccountParams())
+    expect(isValid).toBe(false)
+  })
 })
