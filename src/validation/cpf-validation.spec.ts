@@ -45,4 +45,10 @@ describe('Email Validation', () => {
     sut.validate({ [field]: cpf })
     expect(cpfValidatorSpy.cpf).toBe(cpf)
   })
+
+  test('Deve retornar erro de EmailValidator se retornar erro', () => {
+    const { sut, cpfValidatorSpy } = makeSut()
+    jest.spyOn(cpfValidatorSpy, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(sut.validate).toThrow()
+  })
 })
