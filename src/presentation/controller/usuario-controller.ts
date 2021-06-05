@@ -1,5 +1,5 @@
 import { Usuario } from '../../entities/usecases'
-import { badRequest } from '../helpers'
+import { badRequest, serverError } from '../helpers'
 import { Controller, HttpResponse, Validation } from '../protocols'
 
 export class UsuarioController implements Controller {
@@ -9,12 +9,16 @@ export class UsuarioController implements Controller {
   ) {}
 
   async handle (request: UsuarioController.Request): Promise<HttpResponse> {
-    const error = this.validation.validate(request)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.usuario.add(request)
+      return null
+    } catch {
+      return serverError()
     }
-    await this.usuario.add(request)
-    return null
   }
 }
 
