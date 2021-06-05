@@ -1,10 +1,14 @@
+import { badRequest } from '../helpers'
 import { Controller, HttpResponse, Validation } from '../protocols'
 
 export class UsuarioController implements Controller {
   constructor (private readonly validation: Validation) {}
 
   async handle (request: UsuarioController.Request): Promise<HttpResponse> {
-    this.validation.validate(request)
+    const error = this.validation.validate(request)
+    if (error) {
+      return badRequest(error)
+    }
     return null
   }
 }
