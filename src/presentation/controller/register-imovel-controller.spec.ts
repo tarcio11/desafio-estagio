@@ -2,6 +2,7 @@ import { RegisterImovelController } from './register-imovel-controller'
 import { Validation } from '../protocols'
 import { MissingParamError } from '../errors'
 import { badRequest } from '../helpers'
+import { RegisterImovel } from '../../entities/usecases/imoveis'
 
 import faker from 'faker'
 
@@ -12,6 +13,25 @@ export class ValidationSpy implements Validation {
   validate (input: any): Error {
     this.input = input
     return this.error
+  }
+}
+
+export class RegisterImovelSpy implements RegisterImovel {
+  imovel: RegisterImovel.Params
+  response: RegisterImovel.Response = {
+    id: faker.datatype.uuid(),
+    userId: faker.datatype.uuid(),
+    cep: faker.address.zipCode(),
+    complemento: faker.address.cityPrefix(),
+    numero: Number(faker.finance.amount(1, 3000, null)),
+    quantidade_de_quartos: faker.datatype.number(4),
+    valor_do_aluguel_em_reais: faker.finance.amount(600, 1500),
+    disponivel: faker.datatype.boolean()
+  }
+
+  async register (imovel: RegisterImovel.Params): Promise<RegisterImovel.Response> {
+    this.imovel = imovel
+    return this.response
   }
 }
 
@@ -28,14 +48,17 @@ const mockRegisterImovelParams = (): RegisterImovelController.Request => ({
 type SutTypes = {
   sut
   validationSpy: ValidationSpy
+  registerImovelSpy: RegisterImovelSpy
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
-  const sut = new RegisterImovelController(validationSpy)
+  const registerImovelSpy = new RegisterImovelSpy()
+  const sut = new RegisterImovelController(validationSpy, registerImovelSpy)
   return {
     sut,
-    validationSpy
+    validationSpy,
+    registerImovelSpy
   }
 }
 
@@ -52,5 +75,12 @@ describe('RegisterImovel Controller', () => {
     validationSpy.error = new MissingParamError(faker.random.word())
     const httpResponse = await sut.handle(mockRegisterImovelParams())
     expect(httpResponse).toEqual(badRequest(validationSpy.error))
+  })
+
+  test('Deve chamar RegisterImovel com os valores corretos', async () => {
+    const { sut, registerImovelSpy } = makeSut()
+    const request = mockRegisterImovelParams()
+    await sut.handle(request)
+    expect(registerImovelSpy.imovel).toEqual(request)
   })
 })
