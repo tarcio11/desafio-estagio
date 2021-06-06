@@ -43,9 +43,16 @@ describe('AuthMiddleware', () => {
     expect(loadUserByTokenSpy.tokenDeAcesso).toEqual(request.tokenDeAcesso)
   })
 
-  test('Deve retornar if nenhum x-token-acesso existe nos headers', async () => {
+  test('Deve retornar 403 se nenhum x-token-acesso existe nos headers', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
+  })
+
+  test('Deve retornar 403 se LoadAccountByToken retornar nulo', async () => {
+    const { sut, loadUserByTokenSpy } = makeSut()
+    loadUserByTokenSpy.response = null
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
 })
