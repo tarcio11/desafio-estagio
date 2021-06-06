@@ -1,7 +1,9 @@
 import { LoginController } from './login-controller'
+import { Validation } from '../protocols'
+import { MissingParamError } from '../errors'
+import { badRequest } from '../helpers'
 
 import faker from 'faker'
-import { Validation } from '../protocols'
 
 export class ValidationSpy implements Validation {
   input: any
@@ -38,5 +40,12 @@ describe('Login Controller', () => {
     const request = mockAddAccountParams()
     await sut.handle(request)
     expect(validationSpy.input).toEqual(request)
+  })
+
+  test('Deve retornar erro 400 se Validation retornar um erro', async () => {
+    const { sut, validationSpy } = makeSut()
+    validationSpy.error = new MissingParamError(faker.random.word())
+    const httpResponse = await sut.handle(mockAddAccountParams())
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
 })
