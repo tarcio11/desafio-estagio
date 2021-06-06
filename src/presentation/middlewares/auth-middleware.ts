@@ -1,5 +1,7 @@
 import { HttpResponse, Middleware } from '../protocols'
 import { LoadUserByTokenRepository } from '../../usecases/protocols'
+import { forbidden } from '../helpers'
+import { AccessDeniedError } from '../errors'
 
 export class AuthMiddleware implements Middleware {
   constructor (
@@ -11,7 +13,7 @@ export class AuthMiddleware implements Middleware {
     if (tokenDeAcesso) {
       await this.loadUserByTokenRepository.loadByToken(tokenDeAcesso)
     }
-    return null
+    return forbidden(new AccessDeniedError())
   }
 }
 
