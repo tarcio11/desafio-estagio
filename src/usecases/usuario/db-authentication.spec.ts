@@ -14,7 +14,7 @@ class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
   email: string
   response = {
     id: faker.datatype.uuid(),
-    nome: faker.name.findName(),
+    nomeCompleto: faker.name.findName(),
     cpf: Number(cpf.generate()),
     senha: faker.internet.password()
   }
@@ -139,9 +139,9 @@ describe('DbAuthentication caso de uso', () => {
 
   test('Deve retornar um dado de sucesso', async () => {
     const { sut, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
-    const { tokenDeAcesso, nome } = await sut.auth(mockAuthenticationParams())
+    const { tokenDeAcesso, nomeCompleto } = await sut.auth(mockAuthenticationParams())
     expect(tokenDeAcesso).toBe(encrypterSpy.response)
-    expect(nome).toBe(loadAccountByEmailRepositorySpy.response.nome)
+    expect(nomeCompleto).toBe(loadAccountByEmailRepositorySpy.response.nomeCompleto)
   })
 
   test('Deve chamar UpdateAccessTokenRepository com os valores corretos', async () => {

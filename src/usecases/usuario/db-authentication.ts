@@ -18,7 +18,7 @@ export class DbAuthentication implements Authentication {
         await this.updateAccessTokenRepository.updateAccessToken(user.id, tokenDeAcesso)
         return {
           tokenDeAcesso,
-          nome: user.nome
+          nomeCompleto: user.nomeCompleto
         }
       }
     }
