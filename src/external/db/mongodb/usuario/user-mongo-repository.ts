@@ -1,7 +1,7 @@
-import { CheckUserByEmailRepository, AddUserRepository, LoadAccountByEmailRepository } from '../../../../usecases/protocols'
+import { CheckUserByEmailRepository, AddUserRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '../../../../usecases/protocols'
 import { MongoHelper } from '../helpers/mongo-helper'
 
-export class UserMongoRepository implements CheckUserByEmailRepository, AddUserRepository, LoadAccountByEmailRepository {
+export class UserMongoRepository implements CheckUserByEmailRepository, AddUserRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository {
   async add (data: AddUserRepository.Params): Promise<AddUserRepository.Response> {
     const accountCollection = await MongoHelper.getCollection('users')
     const result = await accountCollection.insertOne(data)
@@ -33,5 +33,16 @@ export class UserMongoRepository implements CheckUserByEmailRepository, AddUserR
       }
     })
     return user && MongoHelper.map(user)
+  }
+
+  async updateAccessToken (id: string, token: string): Promise<void> {
+    const accountCollection = await MongoHelper.getCollection('users')
+    await accountCollection.updateOne({
+      _id: id
+    }, {
+      $set: {
+        tokenDeAcesso: token
+      }
+    })
   }
 }
