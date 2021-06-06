@@ -1,4 +1,4 @@
-import { Usuario } from '../../entities/usecases'
+import { Authentication, Usuario } from '../../entities/usecases'
 import { EmailInUseError } from '../errors'
 import { badRequest, forbidden, ok, serverError } from '../helpers'
 import { Controller, HttpResponse, Validation } from '../protocols'
@@ -6,7 +6,8 @@ import { Controller, HttpResponse, Validation } from '../protocols'
 export class UsuarioController implements Controller {
   constructor (
     private readonly validation: Validation,
-    private readonly usuario: Usuario
+    private readonly usuario: Usuario,
+    private readonly authentication: Authentication
   ) {}
 
   async handle (request: UsuarioController.Request): Promise<HttpResponse> {
@@ -19,6 +20,8 @@ export class UsuarioController implements Controller {
       if (!isValid) {
         return forbidden(new EmailInUseError())
       }
+      const { email, senha } = request
+      await this.authentication.auth({ email, senha })
       return ok(isValid)
     } catch {
       return serverError()
