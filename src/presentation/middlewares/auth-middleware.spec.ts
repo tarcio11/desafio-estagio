@@ -1,7 +1,9 @@
 import { AuthMiddleware } from './auth-middleware'
+import { LoadUserByTokenRepository } from '../../usecases/protocols'
+import { forbidden } from '../helpers'
+import { AccessDeniedError } from '../errors'
 
 import faker from 'faker'
-import { LoadUserByTokenRepository } from '../../usecases/protocols'
 
 const mockRequest = (): AuthMiddleware.Request => ({
   tokenDeAcesso: faker.datatype.uuid()
@@ -39,5 +41,11 @@ describe('AuthMiddleware', () => {
     const request = mockRequest()
     await sut.handle(request)
     expect(loadUserByTokenSpy.tokenDeAcesso).toEqual(request.tokenDeAcesso)
+  })
+
+  test('Deve retornar if nenhum x-token-acesso existe nos headers', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
 })
