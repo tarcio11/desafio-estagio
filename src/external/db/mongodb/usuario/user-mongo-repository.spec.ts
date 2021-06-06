@@ -63,5 +63,11 @@ describe('UserMongoRepository', () => {
       expect(account.cpf).toBe(addAccountParams.cpf)
       expect(account.senha).toBe(addAccountParams.senha)
     })
+
+    test('Deve retornar nulo se loadByEmail falhar', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByEmail(faker.internet.email())
+      expect(account).toBeFalsy()
+    })
   })
 })
