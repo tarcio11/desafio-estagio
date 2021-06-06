@@ -1,9 +1,11 @@
+import { Authentication } from '../../entities/usecases'
 import { badRequest } from '../helpers'
 import { Controller, HttpResponse, Validation } from '../protocols'
 
 export class LoginController implements Controller {
   constructor (
-    private readonly validation: Validation
+    private readonly validation: Validation,
+    private readonly authentication: Authentication
   ) {}
 
   async handle (request: LoginController.Request): Promise<HttpResponse> {
@@ -11,6 +13,7 @@ export class LoginController implements Controller {
     if (error) {
       return badRequest(error)
     }
+    await this.authentication.auth(request)
     return null
   }
 }
