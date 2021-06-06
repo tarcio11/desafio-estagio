@@ -1,18 +1,18 @@
 import { HttpResponse, Middleware } from '../protocols'
-import { LoadUserByTokenRepository } from '../../usecases/protocols'
 import { forbidden, ok, serverError } from '../helpers'
 import { AccessDeniedError } from '../errors'
+import { LoadUserByToken } from '../../entities/usecases'
 
 export class AuthMiddleware implements Middleware {
   constructor (
-    private readonly loadUserByTokenRepository: LoadUserByTokenRepository
+    private readonly loadUserByTokenRepository: LoadUserByToken
   ) {}
 
   async handle (request: AuthMiddleware.Request): Promise<HttpResponse> {
     const { tokenDeAcesso } = request
     try {
       if (tokenDeAcesso) {
-        const user = await this.loadUserByTokenRepository.loadByToken(tokenDeAcesso)
+        const user = await this.loadUserByTokenRepository.load(tokenDeAcesso)
         if (user) {
           return ok({ userId: user.id })
         }

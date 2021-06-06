@@ -1,4 +1,4 @@
-import { DbLoadAccountByToken } from './db-load-user-by-token'
+import { DbLoadUserByToken } from './db-load-user-by-token'
 import { Decrypter, LoadUserByTokenRepository } from '../protocols'
 
 import faker from 'faker'
@@ -26,7 +26,7 @@ class LoadUserByTokenRepositorySpy implements LoadUserByTokenRepository {
 }
 
 type SutTypes = {
-  sut: DbLoadAccountByToken
+  sut: DbLoadUserByToken
   decrypterSpy: DecrypterSpy
   loadUserByTokenRepositorySpy: LoadUserByTokenRepositorySpy
 }
@@ -34,7 +34,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const decrypterSpy = new DecrypterSpy()
   const loadUserByTokenRepositorySpy = new LoadUserByTokenRepositorySpy()
-  const sut = new DbLoadAccountByToken(decrypterSpy, loadUserByTokenRepositorySpy)
+  const sut = new DbLoadUserByToken(decrypterSpy, loadUserByTokenRepositorySpy)
   return {
     sut,
     decrypterSpy,
@@ -44,7 +44,7 @@ const makeSut = (): SutTypes => {
 
 let token: string
 
-describe('DbLoadAccountByToken caso de uso', () => {
+describe('DbLoadUserByToken caso de uso', () => {
   beforeEach(() => {
     token = faker.datatype.uuid()
   })
