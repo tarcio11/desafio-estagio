@@ -1,5 +1,5 @@
 import { Controller, HttpResponse, Validation } from '../protocols'
-import { badRequest, serverError } from '../helpers'
+import { badRequest, ok, serverError } from '../helpers'
 import { RegisterImovel } from '../../entities/usecases/imoveis'
 
 export class RegisterImovelController implements Controller {
@@ -14,8 +14,8 @@ export class RegisterImovelController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.registerImovel.register(request)
-      return null
+      const imovelModel = await this.registerImovel.register(request)
+      return ok(imovelModel)
     } catch (error) {
       return serverError()
     }
