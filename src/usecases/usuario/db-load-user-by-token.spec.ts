@@ -69,9 +69,16 @@ describe('DbLoadAccountByToken caso de uso', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Deve chamar LoadAccountByTokenRepository com o valor correto', async () => {
+  test('Deve chamar LoadUserByTokenRepository com o valor correto', async () => {
     const { sut, loadUserByTokenRepositorySpy } = makeSut()
     await sut.load(token)
     expect(loadUserByTokenRepositorySpy.token).toBe(token)
+  })
+
+  test('Deve retornar nulo se LoadUserByTokenRepository retornar nulo', async () => {
+    const { sut, loadUserByTokenRepositorySpy } = makeSut()
+    loadUserByTokenRepositorySpy.response = null
+    const user = await sut.load(token)
+    expect(user).toBeNull()
   })
 })
