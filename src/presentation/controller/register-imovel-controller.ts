@@ -1,5 +1,5 @@
 import { Controller, HttpResponse, Validation } from '../protocols'
-import { badRequest } from '../helpers'
+import { badRequest, serverError } from '../helpers'
 import { RegisterImovel } from '../../entities/usecases/imoveis'
 
 export class RegisterImovelController implements Controller {
@@ -9,12 +9,16 @@ export class RegisterImovelController implements Controller {
   ) {}
 
   async handle (request: RegisterImovelController.Request): Promise<HttpResponse> {
-    const error = this.validation.validate(request)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.registerImovel.register(request)
+      return null
+    } catch (error) {
+      return serverError()
     }
-    await this.registerImovel.register(request)
-    return null
   }
 }
 
