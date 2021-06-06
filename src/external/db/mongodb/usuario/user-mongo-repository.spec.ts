@@ -70,4 +70,19 @@ describe('UserMongoRepository', () => {
       expect(account).toBeFalsy()
     })
   })
+
+  describe('updateAccessToken()', () => {
+    test('Deve atualizar a conta tokenDeAcesso em caso de sucesso', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      const res = await accountCollection.insertOne(addAccountParams)
+      const fakeAccount = res.ops[0]
+      expect(fakeAccount.accessToken).toBeFalsy()
+      const tokenDeAcesso = faker.datatype.uuid()
+      await sut.updateAccessToken(fakeAccount._id, tokenDeAcesso)
+      const account = await accountCollection.findOne({ _id: fakeAccount._id })
+      expect(account).toBeTruthy()
+      expect(account.tokenDeAcesso).toBe(tokenDeAcesso)
+    })
+  })
 })
