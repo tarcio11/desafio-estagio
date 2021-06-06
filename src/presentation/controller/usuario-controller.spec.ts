@@ -103,12 +103,6 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
 
-  test('Deve retornar 200 se credenciais válidas forem fornecidas', async () => {
-    const { sut, usuarioSpy } = makeSut()
-    const httpResponse = await sut.handle(mockAddAccountParams())
-    expect(httpResponse).toEqual(ok(usuarioSpy.response))
-  })
-
   test('Deve chamar Authentication com os valores corretos', async () => {
     const { sut, authenticationSpy } = makeSut()
     const request = mockAddAccountParams()
@@ -117,5 +111,11 @@ describe('SignUp Controller', () => {
       email: request.email,
       senha: request.senha
     })
+  })
+
+  test('Deve retornar 200 se credenciais válidas forem fornecidas', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    const httpResponse = await sut.handle(mockAddAccountParams())
+    expect(httpResponse).toEqual(ok(authenticationSpy.response))
   })
 })

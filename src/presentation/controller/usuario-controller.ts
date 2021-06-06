@@ -21,8 +21,8 @@ export class UsuarioController implements Controller {
         return forbidden(new EmailInUseError())
       }
       const { email, senha } = request
-      await this.authentication.auth({ email, senha })
-      return ok(isValid)
+      const authenticationModel = await this.authentication.auth({ email, senha })
+      return ok(authenticationModel)
     } catch {
       return serverError()
     }

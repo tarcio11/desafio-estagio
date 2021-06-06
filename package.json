@@ -10,8 +10,8 @@
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:staged": "jest --passWithNoTests",
     "test:verbose": "jest --passWithNoTests --runInBand",
-    "test:unit": "yarn test -- --watch -c jest-unit-config.js",
-    "test:integration": "yarn test -- --watch -c jest-integration-config.js",
+    "test:unit": "yarn test --watch -c jest-unit-config.js",
+    "test:integration": "yarn test --watch -c jest-integration-config.js",
     "test:ci:test": "yarn test --watch --coverage",
     "test:ci": "yarn test --coverage"
   },
