@@ -4,13 +4,13 @@ import { Usuario } from '../../../../entities/usecases'
 
 import { Collection } from 'mongodb'
 import faker from 'faker'
-import { cnpj } from 'cpf-cnpj-validator'
+import { cpf } from 'cpf-cnpj-validator'
 
 let accountCollection: Collection
 
 const mockAddAccountParams = (): Usuario.Params => ({
   nomeCompleto: faker.name.findName(),
-  cpf: Number(cnpj.generate()),
+  cpf: Number(cpf.generate()),
   email: faker.internet.email(),
   senha: faker.internet.password()
 })
@@ -83,6 +83,17 @@ describe('UserMongoRepository', () => {
       const account = await accountCollection.findOne({ _id: fakeAccount._id })
       expect(account).toBeTruthy()
       expect(account.tokenDeAcesso).toBe(tokenDeAcesso)
+    })
+  })
+
+  describe('loadByToken()', () => {
+    test('Deve retornar um usuario em caso de sucesso', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      const res = await accountCollection.insertOne(addAccountParams)
+      const fakeAccount = res.ops[0]
+      const account = await sut.loadByToken(fakeAccount.tokenDeAcesso)
+      expect(account.id).toBeTruthy()
     })
   })
 })
