@@ -1,5 +1,5 @@
 import { UsuarioController } from './usuario-controller'
-import { Usuario } from '../../entities/usecases'
+import { Authentication, Usuario } from '../../entities/usecases'
 import { Validation } from '../protocols'
 import { badRequest, forbidden, ok, serverError } from '../helpers'
 import { EmailInUseError, MissingParamError } from '../errors'
@@ -27,6 +27,19 @@ export class UsuarioSpy implements Usuario {
   }
 }
 
+export class AuthenticationSpy implements Authentication {
+  params: Authentication.Params
+  response: Authentication.Result = {
+    nomeCompleto: faker.name.findName(),
+    tokenDeAcesso: faker.datatype.uuid()
+  }
+
+  async auth (params: Authentication.Params): Promise<Authentication.Result> {
+    this.params = params
+    return this.response
+  }
+}
+
 const mockAddAccountParams = (): Usuario.Params => ({
   nomeCompleto: faker.name.findName(),
   cpf: Number(cpf.generate()),
@@ -38,16 +51,19 @@ type SutTypes = {
   sut: UsuarioController
   validationSpy: ValidationSpy
   usuarioSpy: UsuarioSpy
+  authenticationSpy: AuthenticationSpy
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
   const usuarioSpy = new UsuarioSpy()
-  const sut = new UsuarioController(validationSpy, usuarioSpy)
+  const authenticationSpy = new AuthenticationSpy()
+  const sut = new UsuarioController(validationSpy, usuarioSpy, authenticationSpy)
   return {
     sut,
     validationSpy,
-    usuarioSpy
+    usuarioSpy,
+    authenticationSpy
   }
 }
 
@@ -91,5 +107,15 @@ describe('SignUp Controller', () => {
     const { sut, usuarioSpy } = makeSut()
     const httpResponse = await sut.handle(mockAddAccountParams())
     expect(httpResponse).toEqual(ok(usuarioSpy.response))
+  })
+
+  test('Deve chamar Authentication com os valores corretos', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    const request = mockAddAccountParams()
+    await sut.handle(request)
+    expect(authenticationSpy.params).toEqual({
+      email: request.email,
+      senha: request.senha
+    })
   })
 })
