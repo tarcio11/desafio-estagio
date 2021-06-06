@@ -12,7 +12,7 @@
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "yarn test -- --watch -c jest-unit-config.js",
     "test:integration": "yarn test -- --watch -c jest-integration-config.js",
-    "test:ci": "npm test -- --coverage"
+    "test:ci": "yarn test -- --coverage"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.5",

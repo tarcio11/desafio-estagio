@@ -4,6 +4,7 @@ import { AddUserRepository, CheckUserByEmailRepository } from '../protocols/db'
 import { Usuario } from '../../entities/usecases'
 
 import faker from 'faker'
+import { cpf } from 'cpf-cnpj-validator'
 
 class HasherSpy implements Hasher {
   senha: string
@@ -27,7 +28,7 @@ class AddUserRepositorySpy implements AddUserRepository {
 
 class CheckUserByEmailRepositorySpy implements CheckUserByEmailRepository {
   email: string
-  response = true
+  response = false
 
   async checkByEmail (email: string): Promise<CheckUserByEmailRepository.Response> {
     this.email = email
@@ -37,7 +38,7 @@ class CheckUserByEmailRepositorySpy implements CheckUserByEmailRepository {
 
 const mockAddAccountParams = (): Usuario.Params => ({
   nomeCompleto: faker.name.findName(),
-  cpf: faker.random.number(11),
+  cpf: Number(cpf.generate()),
   email: faker.internet.email(),
   senha: faker.internet.password()
 })
@@ -62,7 +63,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('DbAddUsuario Caso de uso', () => {
+describe('DbAddUsuario Casotrue de uso', () => {
   test('Deve chamar Hasher com a senha correta', async () => {
     const { sut, hasherSpy } = makeSut()
     const addAccountParams = mockAddAccountParams()
@@ -118,7 +119,7 @@ describe('DbAddUsuario Caso de uso', () => {
 
   test('Deve retornar falso se CheckAccountByEmailRepository retornar verdadeiro', async () => {
     const { sut, checkUserByEmailRepositorySpy } = makeSut()
-    checkUserByEmailRepositorySpy.response = false
+    checkUserByEmailRepositorySpy.response = true
     const isValid = await sut.add(mockAddAccountParams())
     expect(isValid).toBe(false)
   })
