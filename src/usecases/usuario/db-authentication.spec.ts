@@ -1,6 +1,6 @@
 import { DbAuthentication } from './db-authentication'
 import { Authentication } from '../../entities/usecases'
-import { Encrypter, HashComparer, LoadAccountByEmailRepository } from '../protocols'
+import { Encrypter, HashComparer, LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '../protocols'
 
 import faker from 'faker'
 import { cpf } from 'cpf-cnpj-validator'
@@ -47,23 +47,36 @@ class EncrypterSpy implements Encrypter {
   }
 }
 
+class UpdateAccessTokenRepositorySpy implements UpdateAccessTokenRepository {
+  id: string
+  token: string
+
+  async updateAccessToken (id: string, token: string): Promise<void> {
+    this.id = id
+    this.token = token
+  }
+}
+
 type SutTypes = {
   sut: DbAuthentication
   loadAccountByEmailRepositorySpy: LoadAccountByEmailRepositorySpy
   hashComparerSpy: HashComparerSpy
   encrypterSpy: EncrypterSpy
+  updateAccessTokenRepositorySpy: UpdateAccessTokenRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositorySpy = new LoadAccountByEmailRepositorySpy()
   const hashComparerSpy = new HashComparerSpy()
   const encrypterSpy = new EncrypterSpy()
-  const sut = new DbAuthentication(loadAccountByEmailRepositorySpy, hashComparerSpy, encrypterSpy)
+  const updateAccessTokenRepositorySpy = new UpdateAccessTokenRepositorySpy()
+  const sut = new DbAuthentication(loadAccountByEmailRepositorySpy, hashComparerSpy, encrypterSpy, updateAccessTokenRepositorySpy)
   return {
     sut,
     loadAccountByEmailRepositorySpy,
     hashComparerSpy,
-    encrypterSpy
+    encrypterSpy,
+    updateAccessTokenRepositorySpy
   }
 }
 
@@ -111,7 +124,7 @@ describe('DbAuthentication caso de uso', () => {
     expect(model).toBeNull()
   })
 
-  test('Deve chamar Encrypter com os valores corretos id', async () => {
+  test('Deve chamar Encrypter com o id correto', async () => {
     const { sut, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
     await sut.auth(mockAuthenticationParams())
     expect(encrypterSpy.id).toBe(loadAccountByEmailRepositorySpy.response.id)
@@ -129,5 +142,12 @@ describe('DbAuthentication caso de uso', () => {
     const { tokenDeAcesso, nome } = await sut.auth(mockAuthenticationParams())
     expect(tokenDeAcesso).toBe(encrypterSpy.response)
     expect(nome).toBe(loadAccountByEmailRepositorySpy.response.nome)
+  })
+
+  test('Deve chamar UpdateAccessTokenRepository com os valores corretos', async () => {
+    const { sut, updateAccessTokenRepositorySpy, loadAccountByEmailRepositorySpy, encrypterSpy } = makeSut()
+    await sut.auth(mockAuthenticationParams())
+    expect(updateAccessTokenRepositorySpy.id).toBe(loadAccountByEmailRepositorySpy.response.id)
+    expect(updateAccessTokenRepositorySpy.token).toBe(encrypterSpy.response)
   })
 })
