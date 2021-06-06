@@ -6,9 +6,20 @@ import faker from 'faker'
 
 class RegisterImovelRepositorySpy implements RegisterImovelRepository {
   imovel: RegisterImovelRepository.Params
+  response: RegisterImovelRepository.Response = {
+    id: faker.datatype.uuid(),
+    userId: faker.datatype.uuid(),
+    cep: faker.address.zipCode(),
+    complemento: faker.address.cityPrefix(),
+    numero: Number(faker.finance.amount(1, 3000, null)),
+    quantidade_de_quartos: faker.datatype.number(4),
+    valor_do_aluguel_em_reais: faker.finance.amount(600, 1500),
+    disponivel: faker.datatype.boolean()
+  }
 
-  async register (imovel: RegisterImovelRepository.Params): Promise<void> {
+  async register (imovel: RegisterImovelRepository.Params): Promise<RegisterImovelRepository.Response> {
     this.imovel = imovel
+    return this.response
   }
 }
 
@@ -49,5 +60,11 @@ describe('DbAddUsuario caso de uso', () => {
     jest.spyOn(registerImovelRepositorySpy, 'register').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.register(mockRegisterImovelParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Deve retornar os dados de sucesso', async () => {
+    const { sut, registerImovelRepositorySpy } = makeSut()
+    const imovel = await sut.register(mockRegisterImovelParams())
+    expect(imovel).toEqual(registerImovelRepositorySpy.response)
   })
 })
