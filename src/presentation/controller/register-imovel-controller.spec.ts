@@ -1,5 +1,7 @@
 import { RegisterImovelController } from './register-imovel-controller'
 import { Validation } from '../protocols'
+import { MissingParamError } from '../errors'
+import { badRequest } from '../helpers'
 
 import faker from 'faker'
 
@@ -43,5 +45,12 @@ describe('RegisterImovel Controller', () => {
     const request = mockRegisterImovelParams()
     await sut.handle(request)
     expect(validationSpy.input).toEqual(request)
+  })
+
+  test('Deve retornar erro 400 se Validation retornar um erro', async () => {
+    const { sut, validationSpy } = makeSut()
+    validationSpy.error = new MissingParamError(faker.random.word())
+    const httpResponse = await sut.handle(mockRegisterImovelParams())
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
 })
