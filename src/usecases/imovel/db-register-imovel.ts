@@ -5,7 +5,6 @@ export class DbRegisterImovel implements RegisterImovel {
   constructor (private readonly registerImovelRepository: RegisterImovelRepository) {}
 
   async register (imovel: RegisterImovel.Params): Promise<RegisterImovel.Response> {
-    await this.registerImovelRepository.register(imovel)
-    return null
+    return await this.registerImovelRepository.register(imovel)
   }
 }
