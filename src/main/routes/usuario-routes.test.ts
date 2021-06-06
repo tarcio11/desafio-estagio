@@ -3,8 +3,6 @@ import request from 'supertest'
 import app from '../config/app'
 import { MongoHelper } from '../../external/db/mongodb/helpers/mongo-helper'
 
-import { cpf } from 'cpf-cnpj-validator'
-const FakeCPF = cpf.generate()
 let accountCollection: Collection
 
 describe('SingUp Routes', () => {
@@ -26,7 +24,7 @@ describe('SingUp Routes', () => {
       .post('/api/signup')
       .send({
         nomeCompleto: 'Tarcio Rocha',
-        cpf: Number(FakeCPF),
+        cpf: 11438374798,
         email: 'tarcio@mail.com',
         senha: '123456'
       })
