@@ -123,4 +123,11 @@ describe('DbAuthentication caso de uso', () => {
     const promise = sut.auth(mockAuthenticationParams())
     await expect(promise).rejects.toThrow()
   })
+
+  test('Deve retornar um dado de sucesso', async () => {
+    const { sut, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
+    const { tokenDeAcesso, nome } = await sut.auth(mockAuthenticationParams())
+    expect(tokenDeAcesso).toBe(encrypterSpy.response)
+    expect(nome).toBe(loadAccountByEmailRepositorySpy.response.nome)
+  })
 })
