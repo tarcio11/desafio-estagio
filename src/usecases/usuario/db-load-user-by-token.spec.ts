@@ -87,4 +87,11 @@ describe('DbLoadAccountByToken caso de uso', () => {
     const user = await sut.load(token)
     expect(user).toEqual(loadUserByTokenRepositorySpy.response)
   })
+
+  test('Deve retornar erro de LoadUserByTokenRepository retornar erro', async () => {
+    const { sut, loadUserByTokenRepositorySpy } = makeSut()
+    jest.spyOn(loadUserByTokenRepositorySpy, 'loadByToken').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.load(token)
+    await expect(promise).rejects.toThrow()
+  })
 })
