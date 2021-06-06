@@ -63,7 +63,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('DbAddUsuario Casotrue de uso', () => {
+describe('DbAddUsuario caso de uso', () => {
   test('Deve chamar Hasher com a senha correta', async () => {
     const { sut, hasherSpy } = makeSut()
     const addAccountParams = mockAddAccountParams()
