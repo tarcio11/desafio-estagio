@@ -43,4 +43,11 @@ describe('DbAddUsuario caso de uso', () => {
     await sut.register(registerImovelParams)
     expect(registerImovelRepositorySpy.imovel).toBe(registerImovelParams)
   })
+
+  test('Deve retornar erro de RegisterImovelRepository se retornar erro', async () => {
+    const { sut, registerImovelRepositorySpy } = makeSut()
+    jest.spyOn(registerImovelRepositorySpy, 'register').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.register(mockRegisterImovelParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
