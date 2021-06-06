@@ -50,4 +50,18 @@ describe('UserMongoRepository', () => {
       expect(exist).toBeTruthy()
     })
   })
+
+  describe('loadByEmail()', () => {
+    test('Deve retornar um usuario em caso de sucesso', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      await accountCollection.insertOne(addAccountParams)
+      const account = await sut.loadByEmail(addAccountParams.email)
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.nomeCompleto).toBe(addAccountParams.nomeCompleto)
+      expect(account.cpf).toBe(addAccountParams.cpf)
+      expect(account.senha).toBe(addAccountParams.senha)
+    })
+  })
 })
