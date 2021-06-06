@@ -1,6 +1,6 @@
 import { DbAuthentication } from './db-authentication'
 import { Authentication } from '../../entities/usecases'
-import { HashComparer, LoadAccountByEmailRepository } from '../protocols'
+import { Encrypter, HashComparer, LoadAccountByEmailRepository } from '../protocols'
 
 import faker from 'faker'
 import { cpf } from 'cpf-cnpj-validator'
@@ -37,20 +37,33 @@ class HashComparerSpy implements HashComparer {
   }
 }
 
+class EncrypterSpy implements Encrypter {
+  id: string
+  response = faker.datatype.uuid()
+
+  async encrypt (id: string): Promise<string> {
+    this.id = id
+    return this.response
+  }
+}
+
 type SutTypes = {
   sut: DbAuthentication
   loadAccountByEmailRepositorySpy: LoadAccountByEmailRepositorySpy
   hashComparerSpy: HashComparerSpy
+  encrypterSpy: EncrypterSpy
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositorySpy = new LoadAccountByEmailRepositorySpy()
   const hashComparerSpy = new HashComparerSpy()
-  const sut = new DbAuthentication(loadAccountByEmailRepositorySpy, hashComparerSpy)
+  const encrypterSpy = new EncrypterSpy()
+  const sut = new DbAuthentication(loadAccountByEmailRepositorySpy, hashComparerSpy, encrypterSpy)
   return {
     sut,
     loadAccountByEmailRepositorySpy,
-    hashComparerSpy
+    hashComparerSpy,
+    encrypterSpy
   }
 }
 
@@ -96,5 +109,11 @@ describe('DbAuthentication caso de uso', () => {
     hashComparerSpy.response = null
     const model = await sut.auth(mockAuthenticationParams())
     expect(model).toBeNull()
+  })
+
+  test('Deve chamar Encrypter com os valores corretos id', async () => {
+    const { sut, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
+    await sut.auth(mockAuthenticationParams())
+    expect(encrypterSpy.id).toBe(loadAccountByEmailRepositorySpy.response.id)
   })
 })
