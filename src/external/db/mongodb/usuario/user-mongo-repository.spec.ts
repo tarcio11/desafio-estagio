@@ -95,5 +95,11 @@ describe('UserMongoRepository', () => {
       const account = await sut.loadByToken(fakeAccount.tokenDeAcesso)
       expect(account.id).toBeTruthy()
     })
+
+    test('Deve retornar nulo se loadByToken falhar', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByToken(faker.random.uuid())
+      expect(account).toBeFalsy()
+    })
   })
 })
