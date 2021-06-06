@@ -67,4 +67,11 @@ describe('DbAddUsuario caso de uso', () => {
     const imovel = await sut.register(mockRegisterImovelParams())
     expect(imovel).toEqual(registerImovelRepositorySpy.response)
   })
+
+  test('Deve retornar nulo se RegisterImovelRepository retornar nulo', async () => {
+    const { sut, registerImovelRepositorySpy } = makeSut()
+    registerImovelRepositorySpy.response = null
+    const model = await sut.register(mockRegisterImovelParams())
+    expect(model).toBeNull()
+  })
 })
