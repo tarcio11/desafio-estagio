@@ -1,7 +1,7 @@
 import { ImovelResultModel } from '../../models'
 
 export interface RegisterImovel {
-  register: (imovel: ImovelResultModel) => Promise<RegisterImovel.Response>
+  register: (imovel: RegisterImovel.Params) => Promise<RegisterImovel.Response>
 }
 
 export namespace RegisterImovel {
