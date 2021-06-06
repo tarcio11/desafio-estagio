@@ -2,7 +2,7 @@ import { AuthMiddleware } from './auth-middleware'
 import { LoadUserByTokenRepository } from '../../usecases/protocols'
 import { forbidden, ok, serverError } from '../helpers'
 import { AccessDeniedError } from '../errors'
-import { LoadUserByToken } from '../../entities/usecases'
+import { LoadUserByToken } from '../../entities/usecases/usuario'
 
 import faker from 'faker'
 

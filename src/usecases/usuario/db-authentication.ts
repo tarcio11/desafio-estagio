@@ -1,4 +1,4 @@
-import { Authentication } from '../../entities/usecases'
+import { Authentication } from '../../entities/usecases/usuario'
 import { Encrypter, HashComparer, LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '../protocols'
 
 export class DbAuthentication implements Authentication {

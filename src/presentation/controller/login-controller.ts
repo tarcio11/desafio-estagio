@@ -1,4 +1,4 @@
-import { Authentication } from '../../entities/usecases'
+import { Authentication } from '../../entities/usecases/usuario'
 import { badRequest, ok, serverError, unauthorized } from '../helpers'
 import { Controller, HttpResponse, Validation } from '../protocols'
 

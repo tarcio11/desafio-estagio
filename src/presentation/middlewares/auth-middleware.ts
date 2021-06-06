@@ -1,7 +1,7 @@
 import { HttpResponse, Middleware } from '../protocols'
 import { forbidden, ok, serverError } from '../helpers'
 import { AccessDeniedError } from '../errors'
-import { LoadUserByToken } from '../../entities/usecases'
+import { LoadUserByToken } from '../../entities/usecases/usuario'
 
 export class AuthMiddleware implements Middleware {
   constructor (

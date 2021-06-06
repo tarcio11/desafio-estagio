@@ -1,4 +1,4 @@
-import { Usuario } from '../../../entities/usecases'
+import { Usuario } from '../../../entities/usecases/usuario'
 
 export interface AddUserRepository {
   add: (user: AddUserRepository.Params) => Promise<AddUserRepository.Response>

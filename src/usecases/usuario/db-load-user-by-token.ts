@@ -1,4 +1,4 @@
-import { LoadUserByToken } from '../../entities/usecases'
+import { LoadUserByToken } from '../../entities/usecases/usuario'
 import { Decrypter, LoadUserByTokenRepository } from '../protocols'
 
 export class DbLoadUserByToken implements LoadUserByToken {

@@ -1,7 +1,7 @@
 import { DbAddUser } from './db-add-usurio'
 import { Hasher } from '../protocols'
 import { AddUserRepository, CheckUserByEmailRepository } from '../protocols/db'
-import { Usuario } from '../../entities/usecases'
+import { Usuario } from '../../entities/usecases/usuario'
 
 import faker from 'faker'
 import { cpf } from 'cpf-cnpj-validator'

@@ -1,5 +1,5 @@
 import { UsuarioController } from './usuario-controller'
-import { Authentication, Usuario } from '../../entities/usecases'
+import { Authentication, Usuario } from '../../entities/usecases/usuario'
 import { Validation } from '../protocols'
 import { badRequest, forbidden, ok, serverError } from '../helpers'
 import { EmailInUseError, MissingParamError } from '../errors'

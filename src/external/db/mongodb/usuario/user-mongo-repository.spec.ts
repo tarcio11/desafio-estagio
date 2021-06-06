@@ -1,6 +1,6 @@
 import { UserMongoRepository } from './user-mongo-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
-import { Usuario } from '../../../../entities/usecases'
+import { Usuario } from '../../../../entities/usecases/usuario'
 
 import { Collection } from 'mongodb'
 import faker from 'faker'

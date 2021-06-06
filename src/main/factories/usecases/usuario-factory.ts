@@ -1,4 +1,4 @@
-import { Usuario } from '../../../entities/usecases'
+import { Usuario } from '../../../entities/usecases/usuario'
 import { BcryptAdapter } from '../../../external/cryptography'
 import { UserMongoRepository } from '../../../external/db/mongodb/usuario'
 import { DbAddUser } from '../../../usecases/usuario'

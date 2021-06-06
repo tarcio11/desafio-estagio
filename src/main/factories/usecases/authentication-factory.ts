@@ -1,7 +1,7 @@
 import env from '../../config/env'
 
 import { UserMongoRepository } from '../../../external/db/mongodb/usuario'
-import { Authentication } from '../../../entities/usecases'
+import { Authentication } from '../../../entities/usecases/usuario'
 import { BcryptAdapter, JwtAdapter } from '../../../external/cryptography'
 import { DbAuthentication } from '../../../usecases/usuario'
 

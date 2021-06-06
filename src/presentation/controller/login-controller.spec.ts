@@ -2,7 +2,7 @@ import { LoginController } from './login-controller'
 import { Validation } from '../protocols'
 import { MissingParamError } from '../errors'
 import { badRequest, ok, serverError, unauthorized } from '../helpers'
-import { Authentication } from '../../entities/usecases'
+import { Authentication } from '../../entities/usecases/usuario'
 
 import faker from 'faker'
 

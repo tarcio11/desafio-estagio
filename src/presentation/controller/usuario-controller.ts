@@ -1,4 +1,4 @@
-import { Authentication, Usuario } from '../../entities/usecases'
+import { Authentication, Usuario } from '../../entities/usecases/usuario'
 import { EmailInUseError } from '../errors'
 import { badRequest, forbidden, ok, serverError } from '../helpers'
 import { Controller, HttpResponse, Validation } from '../protocols'
