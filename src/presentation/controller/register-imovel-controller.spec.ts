@@ -1,7 +1,7 @@
 import { RegisterImovelController } from './register-imovel-controller'
 import { Validation } from '../protocols'
 import { MissingParamError } from '../errors'
-import { badRequest } from '../helpers'
+import { badRequest, serverError } from '../helpers'
 import { RegisterImovel } from '../../entities/usecases/imoveis'
 
 import faker from 'faker'
@@ -82,5 +82,12 @@ describe('RegisterImovel Controller', () => {
     const request = mockRegisterImovelParams()
     await sut.handle(request)
     expect(registerImovelSpy.imovel).toEqual(request)
+  })
+
+  test('Deve retornar erro 500 se RegisterImovel arremessar um erro', async () => {
+    const { sut, registerImovelSpy } = makeSut()
+    jest.spyOn(registerImovelSpy, 'register').mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle(mockRegisterImovelParams())
+    expect(httpResponse).toEqual(serverError())
   })
 })
