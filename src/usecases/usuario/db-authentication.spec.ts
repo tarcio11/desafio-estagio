@@ -1,6 +1,6 @@
 import { DbAuthentication } from './db-authentication'
 import { Authentication } from '../../entities/usecases'
-import { LoadAccountByEmailRepository } from '../protocols'
+import { HashComparer, LoadAccountByEmailRepository } from '../protocols'
 
 import faker from 'faker'
 import { cpf } from 'cpf-cnpj-validator'
@@ -25,17 +25,32 @@ class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
   }
 }
 
+class HashComparerSpy implements HashComparer {
+  senha: string
+  hashedSenha: string
+  response = true
+
+  async compare (senha: string, hashedSenha: string): Promise<boolean> {
+    this.senha = senha
+    this.hashedSenha = hashedSenha
+    return this.response
+  }
+}
+
 type SutTypes = {
   sut: DbAuthentication
   loadAccountByEmailRepositorySpy: LoadAccountByEmailRepositorySpy
+  hashComparerSpy: HashComparerSpy
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositorySpy = new LoadAccountByEmailRepositorySpy()
-  const sut = new DbAuthentication(loadAccountByEmailRepositorySpy)
+  const hashComparerSpy = new HashComparerSpy()
+  const sut = new DbAuthentication(loadAccountByEmailRepositorySpy, hashComparerSpy)
   return {
     sut,
-    loadAccountByEmailRepositorySpy
+    loadAccountByEmailRepositorySpy,
+    hashComparerSpy
   }
 }
 
@@ -59,5 +74,13 @@ describe('DbAuthentication caso de uso', () => {
     loadAccountByEmailRepositorySpy.response = null
     const model = await sut.auth(mockAuthenticationParams())
     expect(model).toBeNull()
+  })
+
+  test('Deve chamar HashComparer com os valores corretos', async () => {
+    const { sut, hashComparerSpy, loadAccountByEmailRepositorySpy } = makeSut()
+    const authenticationParams = mockAuthenticationParams()
+    await sut.auth(authenticationParams)
+    expect(hashComparerSpy.senha).toBe(authenticationParams.senha)
+    expect(hashComparerSpy.hashedSenha).toBe(loadAccountByEmailRepositorySpy.response.senha)
   })
 })
