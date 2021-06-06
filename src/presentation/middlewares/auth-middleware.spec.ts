@@ -1,6 +1,6 @@
 import { AuthMiddleware } from './auth-middleware'
 import { LoadUserByTokenRepository } from '../../usecases/protocols'
-import { forbidden, ok } from '../helpers'
+import { forbidden, ok, serverError } from '../helpers'
 import { AccessDeniedError } from '../errors'
 
 import faker from 'faker'
@@ -62,5 +62,12 @@ describe('AuthMiddleware', () => {
     expect(httpResponse).toEqual(ok({
       userId: loadUserByTokenSpy.response.id
     }))
+  })
+
+  test('Deve retornar 500 se LoadAccountByToken arremessar um erro', async () => {
+    const { sut, loadUserByTokenSpy } = makeSut()
+    jest.spyOn(loadUserByTokenSpy, 'loadByToken').mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError())
   })
 })
