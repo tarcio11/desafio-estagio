@@ -1,7 +1,7 @@
 import { LoginController } from './login-controller'
 import { Validation } from '../protocols'
 import { MissingParamError } from '../errors'
-import { badRequest } from '../helpers'
+import { badRequest, unauthorized } from '../helpers'
 import { Authentication } from '../../entities/usecases'
 
 import faker from 'faker'
@@ -29,7 +29,7 @@ export class AuthenticationSpy implements Authentication {
   }
 }
 
-const mockAddAccountParams = (): LoginController.Request => ({
+const mockAuthenticationParams = (): LoginController.Request => ({
   email: faker.internet.email(),
   senha: faker.internet.password()
 })
@@ -54,7 +54,7 @@ const makeSut = (): SutTypes => {
 describe('Login Controller', () => {
   test('Deve chamar Validation com os valores corretos', async () => {
     const { sut, validationSpy } = makeSut()
-    const request = mockAddAccountParams()
+    const request = mockAuthenticationParams()
     await sut.handle(request)
     expect(validationSpy.input).toEqual(request)
   })
@@ -62,17 +62,24 @@ describe('Login Controller', () => {
   test('Deve retornar erro 400 se Validation retornar um erro', async () => {
     const { sut, validationSpy } = makeSut()
     validationSpy.error = new MissingParamError(faker.random.word())
-    const httpResponse = await sut.handle(mockAddAccountParams())
+    const httpResponse = await sut.handle(mockAuthenticationParams())
     expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
 
   test('Deve chamar Authentication com os valores corretos', async () => {
     const { sut, authenticationSpy } = makeSut()
-    const request = mockAddAccountParams()
+    const request = mockAuthenticationParams()
     await sut.handle(request)
     expect(authenticationSpy.params).toEqual({
       email: request.email,
       senha: request.senha
     })
+  })
+
+  test('Should return 401 if invalid credentials are provided', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    authenticationSpy.response = null
+    const httpResponse = await sut.handle(mockAuthenticationParams())
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
