@@ -1,6 +1,6 @@
 import { AuthMiddleware } from './auth-middleware'
 import { LoadUserByTokenRepository } from '../../usecases/protocols'
-import { forbidden } from '../helpers'
+import { forbidden, ok } from '../helpers'
 import { AccessDeniedError } from '../errors'
 
 import faker from 'faker'
@@ -12,7 +12,7 @@ const mockRequest = (): AuthMiddleware.Request => ({
 export class LoadUserByTokenSpy implements LoadUserByTokenRepository {
   tokenDeAcesso: string
   response: LoadUserByTokenRepository.Response = {
-    id: faker.name.findName()
+    id: faker.datatype.uuid()
   }
 
   async loadByToken (tokenDeAcesso: string): Promise<LoadUserByTokenRepository.Response> {
@@ -54,5 +54,13 @@ describe('AuthMiddleware', () => {
     loadUserByTokenSpy.response = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
+  })
+
+  test('Deve retornar 200 se LoadAccountByToken retornar um usuario', async () => {
+    const { sut, loadUserByTokenSpy } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok({
+      userId: loadUserByTokenSpy.response.id
+    }))
   })
 })
