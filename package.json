@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "sucrase-node src/main/server.ts",
-    "test": "jest --passWithNoTests --watch",
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:staged": "jest --passWithNoTests",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "yarn test -- --watch -c jest-unit-config.js",
