@@ -1,6 +1,6 @@
 import { DeleteImovel } from '../../entities/usecases/imoveis'
 import { InvalidParamError } from '../errors'
-import { forbidden } from '../helpers'
+import { forbidden, ok } from '../helpers'
 import { Controller, HttpResponse } from '../protocols'
 
 export class DeleteImovelController implements Controller {
@@ -12,7 +12,7 @@ export class DeleteImovelController implements Controller {
     if (!result) {
       return forbidden(new InvalidParamError('imovelId'))
     }
-    return null
+    return ok(result)
   }
 }
 
