@@ -1,6 +1,6 @@
 import { LoadImovelByIdController } from './load-imovel-by-id-controller'
 import { LoadImovelById } from '../../entities/usecases/imoveis'
-import { ok, unauthorized } from '../helpers'
+import { ok, serverError, unauthorized } from '../helpers'
 
 import faker from 'faker'
 
@@ -60,5 +60,12 @@ describe('LoadImovels Controller', () => {
     const { sut, loadImovelByIdSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok(loadImovelByIdSpy.response))
+  })
+
+  test('Deve retornar erro 500 se LoadImovelById arremessar um erro', async () => {
+    const { sut, loadImovelByIdSpy } = makeSut()
+    jest.spyOn(loadImovelByIdSpy, 'load').mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError())
   })
 })
