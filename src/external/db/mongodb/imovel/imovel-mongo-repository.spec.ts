@@ -94,4 +94,20 @@ describe('UserMongoRepository', () => {
       expect(imovelResult).toBeTruthy()
     })
   })
+
+  describe('loadAll()', () => {
+    test('Deve retornar todos os imoveis em caso de sucesso', async () => {
+      const registerImoveisModels = [mockRegisterImovelParams(), mockRegisterImovelParams()]
+      await imovelCollection.insertMany(registerImoveisModels)
+      const sut = makeSut()
+      const imoveis = await sut.loadAll()
+      expect(imoveis.length).toBe(2)
+      expect(imoveis[0].cep).toBe(registerImoveisModels[0].cep)
+      expect(imoveis[0].complemento).toBe(registerImoveisModels[0].complemento)
+      expect(imoveis[0].numero).toBe(registerImoveisModels[0].numero)
+      expect(imoveis[1].cep).toBe(registerImoveisModels[1].cep)
+      expect(imoveis[1].complemento).toBe(registerImoveisModels[1].complemento)
+      expect(imoveis[1].numero).toBe(registerImoveisModels[1].numero)
+    })
+  })
 })
