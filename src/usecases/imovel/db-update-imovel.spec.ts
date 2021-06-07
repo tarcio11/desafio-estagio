@@ -6,11 +6,9 @@ import faker from 'faker'
 const mockUpdateImovelParams = (): UpdateImovelRepository.Params => ({
   userId: faker.datatype.uuid(),
   imovelId: faker.datatype.uuid(),
-  data: {
-    cep: '2626266',
-    complemento: 'casa',
-    numero: 1816
-  }
+  cep: '2626266',
+  complemento: 'casa',
+  numero: 1816
 })
 
 class UpdateImovelRepositorySpy implements UpdateImovelRepository {

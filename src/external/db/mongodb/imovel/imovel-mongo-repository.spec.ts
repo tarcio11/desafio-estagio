@@ -84,10 +84,8 @@ describe('UserMongoRepository', () => {
       await sut.update({
         imovelId: result.ops[0]._id,
         userId,
-        data: {
-          cep: '151515',
-          numero: 1515
-        }
+        cep: '151515',
+        numero: 1515
       })
       const imovelResult = await imovelCollection.findOne({
         _id: result.ops[0]._id,

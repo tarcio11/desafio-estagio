@@ -21,13 +21,13 @@ export class ImovelMongoRepository implements RegisterImovelRepository, UpdateIm
     let disponivel
 
     const imovelResultCollection = await MongoHelper.getCollection('imoveis')
-    const imovelResult = await imovelResultCollection.findOne({ _id: data.imovelId })
-    data.data.cep ? cep = data.data.cep : cep = imovelResult.cep
-    data.data.numero ? numero = data.data.numero : numero = imovelResult.numero
-    data.data.complemento ? complemento = data.data.complemento : complemento = imovelResult.complemento
-    data.data.quantidade_de_quartos ? quantidade_de_quartos = data.data.quantidade_de_quartos : quantidade_de_quartos = imovelResult.quantidade_de_quartos
-    data.data.valor_do_aluguel_em_reais ? valor_do_aluguel_em_reais = data.data.valor_do_aluguel_em_reais : valor_do_aluguel_em_reais = imovelResult.valor_do_aluguel_em_reais
-    data.data.disponivel ? disponivel = data.data.disponivel : disponivel = imovelResult.disponivel
+    const imovelResult = await imovelResultCollection.findOne({ _id: new ObjectId(data.imovelId) })
+    data.cep ? cep = data.cep : cep = imovelResult.cep
+    data.numero ? numero = data.numero : numero = imovelResult.numero
+    data.complemento ? complemento = data.complemento : complemento = imovelResult.complemento
+    data.quantidade_de_quartos ? quantidade_de_quartos = data.quantidade_de_quartos : quantidade_de_quartos = imovelResult.quantidade_de_quartos
+    data.valor_do_aluguel_em_reais ? valor_do_aluguel_em_reais = data.valor_do_aluguel_em_reais : valor_do_aluguel_em_reais = imovelResult.valor_do_aluguel_em_reais
+    data.disponivel ? disponivel = data.disponivel : disponivel = imovelResult.disponivel
     const result = await imovelResultCollection.findOneAndUpdate({
       _id: new ObjectId(data.imovelId),
       userId: new ObjectId(data.userId)
