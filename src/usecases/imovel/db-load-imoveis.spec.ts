@@ -53,4 +53,11 @@ describe('DbLoadAccounts', () => {
     const imoveis = await sut.load()
     expect(imoveis).toEqual(loadImoveisRepositorySpy.response)
   })
+
+  test('Deve retornar nulo se LoadImoveisRepository retornar nulo', async () => {
+    const { sut, loadImoveisRepositorySpy } = makeSut()
+    loadImoveisRepositorySpy.response = null
+    const model = await sut.load()
+    expect(model).toBeNull()
+  })
 })
