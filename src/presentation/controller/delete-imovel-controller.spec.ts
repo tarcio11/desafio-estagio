@@ -1,6 +1,6 @@
 import { DeleteImovelController } from './delete-imovel-controller'
 import { DeleteImovel } from '../../entities/usecases/imoveis'
-import { forbidden } from '../helpers'
+import { forbidden, ok } from '../helpers'
 import { InvalidParamError } from '../errors'
 
 import faker from 'faker'
@@ -50,5 +50,11 @@ describe('RegisterImovel Controller', () => {
     deleteImovelSpy.response = false
     const httpResponse = await sut.handle(mockDeleteImovelParams())
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('imovelId')))
+  })
+
+  test('Deve retornar 200 em caso de sucesso', async () => {
+    const { sut, deleteImovelSpy } = makeSut()
+    const httpResponse = await sut.handle(mockDeleteImovelParams())
+    expect(httpResponse).toEqual(ok(deleteImovelSpy.response))
   })
 })
