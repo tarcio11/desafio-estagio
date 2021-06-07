@@ -1,5 +1,5 @@
 import { LoadImoveis } from '../../entities/usecases/imoveis'
-import { ok } from '../helpers'
+import { noContent, ok } from '../helpers'
 import { Controller, HttpResponse } from '../protocols'
 
 export class LoadImoveisController implements Controller {
@@ -7,6 +7,6 @@ export class LoadImoveisController implements Controller {
 
   async handle (): Promise<HttpResponse> {
     const imoveisModel = await this.loadImoveis.load()
-    return ok(imoveisModel)
+    return imoveisModel.length ? ok(imoveisModel) : noContent()
   }
 }
