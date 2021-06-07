@@ -158,4 +158,30 @@ describe('Login Routes', () => {
         .expect(200)
     })
   })
+
+  describe('DELETE /imoveis:/imovelId', () => {
+    test('Deve retornar 403 em caso de ausência de tokenDeAcesso', async () => {
+      await request(app)
+        .get('/api/imoveis')
+        .expect(403)
+    })
+
+    test('Deve retornar 200 ao deletar um imovel', async () => {
+      const { tokenDeAcesso, id } = await mockAccessToken()
+      const res = await imovelCollection.insertOne({
+        userId: id,
+        cep: '68510-000',
+        complemento: 'Apartamento',
+        numero: 2000,
+        quantidade_de_quartos: 3,
+        valor_do_aluguel_em_reais: '2000,00 R$',
+        disponivel: true
+      })
+      await request(app)
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        .get(`/api/imoveis/${res.ops[0]._id}`)
+        .set('x-token-acesso', tokenDeAcesso)
+        .expect(200)
+    })
+  })
 })
