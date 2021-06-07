@@ -110,4 +110,19 @@ describe('UserMongoRepository', () => {
       expect(imoveis[1].numero).toBe(registerImoveisModels[1].numero)
     })
   })
+
+  describe('loadImovelById()', () => {
+    test('Deve carregar um Imovel em caso de sucesso', async () => {
+      const imovel = await imovelCollection.insertOne(mockRegisterImovelParams())
+      const sut = makeSut()
+      const fakeImovel = imovel.ops[0]
+      const result = await sut.loadImovelById(fakeImovel._id)
+      expect(fakeImovel.cep).toBe(result.cep)
+      expect(fakeImovel.complemento).toBe(result.complemento)
+      expect(fakeImovel.numero).toBe(result.numero)
+      expect(fakeImovel.quantidade_de_quartos).toBe(result.quantidade_de_quartos)
+      expect(fakeImovel.valor_do_aluguel_em_reais).toBe(result.valor_do_aluguel_em_reais)
+      expect(fakeImovel.disponivel).toBe(result.disponivel)
+    })
+  })
 })
