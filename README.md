@@ -13,6 +13,7 @@ Essa Api tem como objetivo um gerenciamento de imóveis. Foi feita para um desaf
 4. [Atualizar Imóveis](./requirements/update-imovel.md)
 5. [Listar todos Imóveis](./requirements/load-imoveis.md)
 6. [Busca um Imóveis](./requirements/load-imovel.md)
+7. [Deletar um Imóveis](./requirements/delete-imovel.md)
 
 > ## Princípios do SOLID usado na api
 
