@@ -1,6 +1,6 @@
 import { UpdateImovel } from '../../entities/usecases/imoveis'
 import { InvalidParamError } from '../errors'
-import { forbidden, serverError } from '../helpers'
+import { forbidden, ok, serverError } from '../helpers'
 import { Controller, HttpResponse } from '../protocols'
 
 export class UpdateImovelController implements Controller {
@@ -12,7 +12,7 @@ export class UpdateImovelController implements Controller {
       if (!imovelModel) {
         return forbidden(new InvalidParamError('imovelId'))
       }
-      return null
+      return ok(imovelModel)
     } catch (error) {
       return serverError()
     }
