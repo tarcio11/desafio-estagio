@@ -46,4 +46,13 @@ describe('DbLoadAccounts', () => {
     const imoveis = await sut.delete(userId, imovelId)
     expect(imoveis).toEqual(deleteImovelSpy.response)
   })
+
+  test('Deve retornar falso se DeleteImovelRepository retornar falso', async () => {
+    const { sut, deleteImovelSpy } = makeSut()
+    deleteImovelSpy.response = false
+    const userId = faker.random.uuid()
+    const imovelId = faker.random.uuid()
+    const imoveis = await sut.delete(userId, imovelId)
+    expect(imoveis).toEqual(deleteImovelSpy.response)
+  })
 })
