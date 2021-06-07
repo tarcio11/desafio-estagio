@@ -5,7 +5,6 @@ export class DbLoadImoveis implements LoadImoveis {
   constructor (private readonly loadImoveisRepository: LoadImoveisRepository) {}
 
   async load (): Promise<LoadImoveis.Result> {
-    await this.loadImoveisRepository.loadAll()
-    return null
+    return await this.loadImoveisRepository.loadAll()
   }
 }
