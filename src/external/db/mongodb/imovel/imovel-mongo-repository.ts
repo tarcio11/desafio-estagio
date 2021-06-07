@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { ObjectId } from 'mongodb'
-import { RegisterImovelRepository, UpdateImovelRepository } from '../../../../usecases/protocols/db/imovel'
+import { RegisterImovelRepository, UpdateImovelRepository, LoadImoveisRepository } from '../../../../usecases/protocols/db/imovel'
 import { MongoHelper } from '../helpers/mongo-helper'
 
-export class ImovelMongoRepository implements RegisterImovelRepository, UpdateImovelRepository {
+export class ImovelMongoRepository implements RegisterImovelRepository, UpdateImovelRepository, LoadImoveisRepository {
   async register (data: RegisterImovelRepository.Params): Promise<RegisterImovelRepository.Response> {
     const imovelCollection = await MongoHelper.getCollection('imoveis')
     const result = await imovelCollection.insertOne(data)
@@ -42,5 +42,11 @@ export class ImovelMongoRepository implements RegisterImovelRepository, UpdateIm
       }
     }, { upsert: true })
     return result.value
+  }
+
+  async loadAll (): Promise<LoadImoveisRepository.Response> {
+    const imovelCollection = await MongoHelper.getCollection('imoveis')
+    const imoveis = await imovelCollection.find().toArray()
+    return imoveis
   }
 }
