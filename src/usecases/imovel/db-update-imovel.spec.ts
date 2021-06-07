@@ -62,4 +62,11 @@ describe('DbSaveSurveyResult Usecase', () => {
     const imovel = await sut.update(mockUpdateImovelParams())
     expect(imovel).toEqual(updateImovelRepositorySpy.response)
   })
+
+  test('Deve retornar nulo se UpdateImovelRepository retornar nulo', async () => {
+    const { sut, updateImovelRepositorySpy } = makeSut()
+    updateImovelRepositorySpy.response = null
+    const model = await sut.update(mockUpdateImovelParams())
+    expect(model).toBeNull()
+  })
 })
