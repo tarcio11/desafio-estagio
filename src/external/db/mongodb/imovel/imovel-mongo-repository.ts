@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { ObjectId } from 'mongodb'
-import { RegisterImovelRepository, UpdateImovelRepository, LoadImoveisRepository, LoadImovelByIdRepository } from '../../../../usecases/protocols/db/imovel'
+import { RegisterImovelRepository, UpdateImovelRepository, LoadImoveisRepository, LoadImovelByIdRepository, DeleteImovelRepository } from '../../../../usecases/protocols/db/imovel'
 import { MongoHelper } from '../helpers/mongo-helper'
 
-export class ImovelMongoRepository implements RegisterImovelRepository, UpdateImovelRepository, LoadImoveisRepository, LoadImovelByIdRepository {
+export class ImovelMongoRepository implements RegisterImovelRepository, UpdateImovelRepository, LoadImoveisRepository, LoadImovelByIdRepository, DeleteImovelRepository {
   async register (data: RegisterImovelRepository.Params): Promise<RegisterImovelRepository.Response> {
     const imovelCollection = await MongoHelper.getCollection('imoveis')
     const result = await imovelCollection.insertOne(data)
@@ -54,5 +54,14 @@ export class ImovelMongoRepository implements RegisterImovelRepository, UpdateIm
     const imovelCollection = await MongoHelper.getCollection('imoveis')
     const imovel = await imovelCollection.findOne({ _id: new ObjectId(imovelId) })
     return imovel && MongoHelper.map(imovel)
+  }
+
+  async delete (userId: string, imovelId: string): Promise<boolean> {
+    const imovelCollection = await MongoHelper.getCollection('imoveis')
+    const result = await imovelCollection.findOneAndDelete({
+      _id: new ObjectId(imovelId),
+      userId: new ObjectId(userId)
+    })
+    return result !== null
   }
 }
