@@ -47,4 +47,10 @@ describe('DbLoadAccounts', () => {
     const { sut } = makeSut()
     expect(await sut.load()).toBe(await sut.load())
   })
+
+  test('Deve retornar uma lista de imoveis em caso de sucesso', async () => {
+    const { sut, loadImoveisRepositorySpy } = makeSut()
+    const imoveis = await sut.load()
+    expect(imoveis).toEqual(loadImoveisRepositorySpy.response)
+  })
 })
