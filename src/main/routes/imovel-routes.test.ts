@@ -45,7 +45,7 @@ describe('Login Routes', () => {
   })
 
   describe('POST()', () => {
-    test('Deve retornar 200 no login', async () => {
+    test('Deve retornar 200 no Imovel', async () => {
       const accessToken = await mockAccessToken()
       await request(app)
         .post('/api/imoveis')

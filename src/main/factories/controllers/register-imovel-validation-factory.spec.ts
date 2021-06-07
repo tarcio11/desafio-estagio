@@ -8,7 +8,7 @@ describe('LoginValidation Factory', () => {
   test('Deve chamar ValidationComposite com todas as validações', () => {
     makeRegisterImovelValidation()
     const validations: Validation[] = []
-    for (const field of ['userId', 'cep', 'numero', 'complemento', 'valor_do_aluguel_em_reais', 'quantidade_de_quartos', 'disponivel']) {
+    for (const field of ['userId', 'cep', 'numero', 'complemento', 'valor_do_aluguel_em_reais', 'quantidade_de_quartos']) {
       validations.push(new RequiredFieldValidation(field))
     }
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
