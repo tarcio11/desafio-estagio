@@ -1,6 +1,6 @@
 import { DeleteImovelController } from './delete-imovel-controller'
 import { DeleteImovel } from '../../entities/usecases/imoveis'
-import { forbidden, ok } from '../helpers'
+import { forbidden, ok, serverError } from '../helpers'
 import { InvalidParamError } from '../errors'
 
 import faker from 'faker'
@@ -56,5 +56,12 @@ describe('RegisterImovel Controller', () => {
     const { sut, deleteImovelSpy } = makeSut()
     const httpResponse = await sut.handle(mockDeleteImovelParams())
     expect(httpResponse).toEqual(ok(deleteImovelSpy.response))
+  })
+
+  test('Deve retornar erro 500 se DeleteImovel arremessar um erro', async () => {
+    const { sut, deleteImovelSpy } = makeSut()
+    jest.spyOn(deleteImovelSpy, 'delete').mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle(mockDeleteImovelParams())
+    expect(httpResponse).toEqual(serverError())
   })
 })
