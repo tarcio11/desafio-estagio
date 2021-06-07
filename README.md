@@ -9,7 +9,7 @@ Essa Api tem como objetivo um gerenciamento de imóveis. Foi feita para um desaf
 
 1. [Cadastro](./requirements/signup.md)
 2. [Login](./requirements/login.md)
-
+3. [Registrar Imóveis](./requirements/register-imovel.md)
 
 > ## Princípios do SOLID usado na api
 
