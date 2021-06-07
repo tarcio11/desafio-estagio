@@ -55,4 +55,13 @@ describe('DbLoadAccounts', () => {
     const imoveis = await sut.delete(userId, imovelId)
     expect(imoveis).toEqual(deleteImovelSpy.response)
   })
+
+  test('Deve retornar erro de DeleteImovelRepository se retornar erro', async () => {
+    const { sut, deleteImovelSpy } = makeSut()
+    jest.spyOn(deleteImovelSpy, 'delete').mockImplementationOnce(() => { throw new Error() })
+    const userId = faker.random.uuid()
+    const imovelId = faker.random.uuid()
+    const promise = sut.delete(userId, imovelId)
+    await expect(promise).rejects.toThrow()
+  })
 })
