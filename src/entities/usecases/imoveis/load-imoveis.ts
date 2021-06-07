@@ -1,9 +1,9 @@
 import { ImovelResultModel } from '../../models'
 
-export interface LoadAImoveis {
-  load: () => Promise<LoadAImoveis.Result>
+export interface LoadImoveis {
+  load: () => Promise<LoadImoveis.Result>
 }
 
-export namespace LoadAImoveis {
+export namespace LoadImoveis {
   export type Result = ImovelResultModel[]
 }
