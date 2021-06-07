@@ -1,6 +1,6 @@
 import { UpdateImovelController } from './update-imovel-controller'
 import { UpdateImovel } from '../../entities/usecases/imoveis'
-import { forbidden, serverError } from '../helpers'
+import { forbidden, ok, serverError } from '../helpers'
 import { InvalidParamError } from '../errors'
 
 import faker from 'faker'
@@ -68,5 +68,11 @@ describe('RegisterImovel Controller', () => {
     jest.spyOn(updateImovelSpy, 'update').mockImplementationOnce(() => { throw new Error() })
     const httpResponse = await sut.handle(mockUpdateImovelParams())
     expect(httpResponse).toEqual(serverError())
+  })
+
+  test('Deve retornar 200 com os dados da atualização em caso de sucesso', async () => {
+    const { sut, updateImovelSpy } = makeSut()
+    const httpResponse = await sut.handle(mockUpdateImovelParams())
+    expect(httpResponse).toEqual(ok(updateImovelSpy.response))
   })
 })
