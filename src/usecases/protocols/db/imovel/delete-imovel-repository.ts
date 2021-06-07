@@ -1,3 +1,3 @@
 export interface DeleteImovelRepository {
-  delete: (userId: string, imovelId: string) => Promise<void>
+  delete: (userId: string, imovelId: string) => Promise<boolean>
 }

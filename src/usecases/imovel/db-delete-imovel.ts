@@ -5,7 +5,6 @@ export class DbDeleteImovel implements DeleteImovel {
   constructor (private readonly deleteImovelRepository: DeleteImovelRepository) {}
 
   async delete (userId: string, imovelId: string): Promise<boolean> {
-    await this.deleteImovelRepository.delete(userId, imovelId)
-    return null
+    return await this.deleteImovelRepository.delete(userId, imovelId)
   }
 }
