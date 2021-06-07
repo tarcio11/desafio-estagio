@@ -1,5 +1,7 @@
 import { UpdateImovelController } from './update-imovel-controller'
 import { UpdateImovel } from '../../entities/usecases/imoveis'
+import { forbidden } from '../helpers'
+import { InvalidParamError } from '../errors'
 
 import faker from 'faker'
 
@@ -52,5 +54,12 @@ describe('RegisterImovel Controller', () => {
     const updateImovelParams = mockUpdateImovelParams()
     await sut.handle(updateImovelParams)
     expect(updateImovelSpy.params).toEqual(updateImovelParams)
+  })
+
+  test('Deve retornar 403 se UpdateImovel retornar nulo', async () => {
+    const { sut, updateImovelSpy } = makeSut()
+    updateImovelSpy.response = null
+    const httpResponse = await sut.handle(mockUpdateImovelParams())
+    expect(httpResponse).toEqual(forbidden(new InvalidParamError('imovelId')))
   })
 })
