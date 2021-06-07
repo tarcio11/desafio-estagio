@@ -1,6 +1,6 @@
 import { LoadImovelByIdController } from './load-imovel-by-id-controller'
 import { LoadImovelById } from '../../entities/usecases/imoveis'
-import { unauthorized } from '../helpers'
+import { ok, unauthorized } from '../helpers'
 
 import faker from 'faker'
 
@@ -54,5 +54,11 @@ describe('LoadImovels Controller', () => {
     loadImovelByIdSpy.response = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(unauthorized())
+  })
+
+  test('Deve retornar 200 em caso de sucesso', async () => {
+    const { sut, loadImovelByIdSpy } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(loadImovelByIdSpy.response))
   })
 })
