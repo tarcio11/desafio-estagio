@@ -1,6 +1,6 @@
 import { LoadImoveisController } from './load-imoveis-controller'
 import { LoadImoveis } from '../../entities/usecases/imoveis'
-import { noContent } from '../helpers/'
+import { noContent, serverError } from '../helpers/'
 
 import faker from 'faker'
 import { ok } from '../helpers'
@@ -63,5 +63,12 @@ describe('LoadAccounts Controller', () => {
     loadImoveisSpy.response = []
     const httpResponse = await sut.handle()
     expect(httpResponse).toEqual(noContent())
+  })
+
+  test('Deve retornar erro 500 se LoadImoveis arremessar um erro', async () => {
+    const { sut, loadImoveisSpy } = makeSut()
+    jest.spyOn(loadImoveisSpy, 'load').mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle()
+    expect(httpResponse).toEqual(serverError())
   })
 })
