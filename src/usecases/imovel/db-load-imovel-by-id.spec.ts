@@ -43,4 +43,10 @@ describe('DbLoadAccounts', () => {
     await sut.load(imovelId)
     expect(loadImovelByIdRepositorySpy.imovelId).toBe(imovelId)
   })
+
+  test('Deve retornar imovelModel em caso de sucesso', async () => {
+    const { sut, loadImovelByIdRepositorySpy } = makeSut()
+    const accountResult = await sut.load(faker.random.uuid())
+    expect(accountResult).toEqual(loadImovelByIdRepositorySpy.response)
+  })
 })
