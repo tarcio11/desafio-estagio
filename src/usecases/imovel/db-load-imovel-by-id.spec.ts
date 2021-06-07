@@ -49,4 +49,12 @@ describe('DbLoadAccounts', () => {
     const accountResult = await sut.load(faker.random.uuid())
     expect(accountResult).toEqual(loadImovelByIdRepositorySpy.response)
   })
+
+  test('Deve retornar erro de LoadAccountByIdRepository se retornar erro', async () => {
+    const { sut, loadImovelByIdRepositorySpy } = makeSut()
+    jest.spyOn(loadImovelByIdRepositorySpy, 'loadImovelById').mockImplementationOnce(() => { throw new Error() })
+    const imovelId = faker.random.uuid()
+    const promise = sut.load(imovelId)
+    await expect(promise).rejects.toThrow()
+  })
 })
