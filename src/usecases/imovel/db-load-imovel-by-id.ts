@@ -5,7 +5,6 @@ export class DbLoadImovelById implements LoadImovelById {
   constructor (private readonly loadImovelByIdRepository: LoadImovelByIdRepository) {}
 
   async load (imovelId: string): Promise<LoadImovelById.Result> {
-    await this.loadImovelByIdRepository.loadImovelById(imovelId)
-    return null
+    return await this.loadImovelByIdRepository.loadImovelById(imovelId)
   }
 }
