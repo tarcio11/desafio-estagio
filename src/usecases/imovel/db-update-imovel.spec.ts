@@ -49,4 +49,11 @@ describe('DbSaveSurveyResult Usecase', () => {
     await sut.update(surveyResultData)
     expect(updateImovelRepositorySpy.params).toEqual(surveyResultData)
   })
+
+  test('Deve retornar erro de UpdateImovelRepository se retornar erro', async () => {
+    const { sut, updateImovelRepositorySpy } = makeSut()
+    jest.spyOn(updateImovelRepositorySpy, 'update').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.update(mockUpdateImovelParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
