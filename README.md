@@ -7,13 +7,13 @@ Essa Api tem como objetivo um gerenciamento de imóveis. Foi feita para um desaf
 
 > ## Apis desenvolvidas atualmente
 
-1. [Cadastro](./requirements/signup.md)
-2. [Login](./requirements/login.md)
-3. [Registrar Imóveis](./requirements/register-imovel.md)
-4. [Atualizar Imóveis](./requirements/update-imovel.md)
-5. [Listar todos Imóveis](./requirements/load-imoveis.md)
-6. [Busca um Imóveis](./requirements/load-imovel.md)
-7. [Deletar um Imóveis](./requirements/delete-imovel.md)
+1. [Cadastro](./requirements/signup.md) ======> http://localhost:5000/api/signup
+2. [Login](./requirements/login.md) ======> http://localhost:5000/api/login
+3. [Registrar Imóveis](./requirements/register-imovel.md) ======> http://localhost:5000/api/imoveis
+4. [Atualizar Imóveis](./requirements/update-imovel.md) ======> http://localhost:5000/api/imoveis/:imovelId
+5. [Listar todos Imóveis](./requirements/load-imoveis.md) ======> http://localhost:5000/api/imoveis
+6. [Busca um Imóveis](./requirements/load-imovel.md) ======> http://localhost:5000/api/:imovelId
+7. [Deletar um Imóveis](./requirements/delete-imovel.md) ======> http://localhost:5000/api/:imovelId
 
 > ## Princípios do SOLID usado na api
 
