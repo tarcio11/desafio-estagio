@@ -132,4 +132,12 @@ describe('Login Routes', () => {
         .expect(200)
     })
   })
+
+  describe('GET /imoveis:/imovelId', () => {
+    test('Deve retornar 403 em caso de ausência de tokenDeAcesso', async () => {
+      await request(app)
+        .get('/api/imoveis')
+        .expect(403)
+    })
+  })
 })
