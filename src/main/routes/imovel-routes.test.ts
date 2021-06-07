@@ -9,7 +9,12 @@ import { sign } from 'jsonwebtoken'
 let imovelCollection: Collection
 let accountCollection: Collection
 
-const mockAccessToken = async (): Promise<string> => {
+type Response = {
+  id: string
+  tokenDeAcesso: string
+}
+
+const mockAccessToken = async (): Promise<Response> => {
   const res = await accountCollection.insertOne({
     nome: 'Tarcio',
     cfp: 11438374798,
@@ -25,7 +30,10 @@ const mockAccessToken = async (): Promise<string> => {
       tokenDeAcesso
     }
   })
-  return tokenDeAcesso
+  return {
+    id,
+    tokenDeAcesso
+  }
 }
 
 describe('Login Routes', () => {
@@ -46,10 +54,10 @@ describe('Login Routes', () => {
 
   describe('POST()', () => {
     test('Deve retornar 200 no Imovel', async () => {
-      const accessToken = await mockAccessToken()
+      const { tokenDeAcesso } = await mockAccessToken()
       await request(app)
         .post('/api/imoveis')
-        .set('x-token-acesso', accessToken)
+        .set('x-token-acesso', tokenDeAcesso)
         .send({
           cep: '68500-000',
           numero: 1010,
@@ -57,6 +65,35 @@ describe('Login Routes', () => {
           valor_do_aluguel_em_reais: '1300,00 R$',
           quantidade_de_quartos: 4,
           disponivel: false
+        })
+        .expect(200)
+    })
+  })
+
+  describe('PUT()', () => {
+    test('Deve retornar 200 em caso de atualização bem sucedida', async () => {
+      const { tokenDeAcesso, id } = await mockAccessToken()
+      const res = await imovelCollection.insertOne({
+        userId: id,
+        cep: '68500-000',
+        complemento: 'casa',
+        numero: 1818,
+        quantidade_de_quartos: 4,
+        valor_do_aluguel_em_reais: '1500,00 R$',
+        disponivel: false
+      })
+      console.log(res.ops[0])
+      await request(app)
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        .put(`/api/imoveis/${res.ops[0]._id}`)
+        .set('x-token-acesso', tokenDeAcesso)
+        .send({
+          cep: '68500-000',
+          numero: 1010,
+          complemento: 'Casa',
+          valor_do_aluguel_em_reais: '1300,00 R$',
+          quantidade_de_quartos: 4,
+          disponivel: true
         })
         .expect(200)
     })
