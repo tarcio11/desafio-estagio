@@ -123,3 +123,7 @@ Essa Api tem como objetivo um gerenciamento de imóveis. Foi feita para um desaf
 * Terminal: `yarn test:verbose` ===> Testes com todas as informações
 * Terminal: `yarn test:staged` ===> Todos os testes da staged de commits
 * Terminal: `yarn test:ci` ===> Cobertura de testes
+
+- ### Sistema de rotas do sistema
+- ### Tem um script no package para auxiliar nisso, uma vez que estamos usando ts.
+- http://localhost:5000/api
