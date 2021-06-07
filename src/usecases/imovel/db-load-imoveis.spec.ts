@@ -60,4 +60,11 @@ describe('DbLoadAccounts', () => {
     const model = await sut.load()
     expect(model).toBeNull()
   })
+
+  test('Deve retornar erro de RegisterImovelRepository se retornar erro', async () => {
+    const { sut, loadImoveisRepositorySpy } = makeSut()
+    jest.spyOn(loadImoveisRepositorySpy, 'loadAll').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.load()
+    await expect(promise).rejects.toThrow()
+  })
 })
