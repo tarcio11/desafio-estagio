@@ -1,12 +1,16 @@
 import { Controller, HttpResponse } from '../protocols'
 import { LoadImovelById } from '../../entities/usecases/imoveis'
+import { unauthorized } from '../helpers'
 
 export class LoadImovelByIdController implements Controller {
   constructor (private readonly loadImovelById: LoadImovelById) {}
 
   async handle (request: LoadImovelByIdController.Request): Promise<HttpResponse> {
     const { imovelId } = request
-    await this.loadImovelById.load(imovelId)
+    const imovelModel = await this.loadImovelById.load(imovelId)
+    if (!imovelModel) {
+      return unauthorized()
+    }
     return null
   }
 }
