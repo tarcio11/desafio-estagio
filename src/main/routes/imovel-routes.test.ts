@@ -105,5 +105,31 @@ describe('Login Routes', () => {
         .get('/api/imoveis')
         .expect(403)
     })
+
+    test('Deve retornar 200 ao carregar o resultado da pesquisa com accessToken', async () => {
+      const { tokenDeAcesso, id } = await mockAccessToken()
+      await imovelCollection.insertOne({
+        userId: id,
+        cep: '68500-000',
+        complemento: 'casa',
+        numero: 1818,
+        quantidade_de_quartos: 4,
+        valor_do_aluguel_em_reais: '1500,00 R$',
+        disponivel: false
+      })
+      await imovelCollection.insertOne({
+        userId: id,
+        cep: '68510-000',
+        complemento: 'Apartamento',
+        numero: 2000,
+        quantidade_de_quartos: 3,
+        valor_do_aluguel_em_reais: '2000,00 R$',
+        disponivel: true
+      })
+      await request(app)
+        .get('/api/imoveis')
+        .set('x-token-acesso', tokenDeAcesso)
+        .expect(200)
+    })
   })
 })
