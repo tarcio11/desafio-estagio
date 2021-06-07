@@ -5,7 +5,6 @@ export class DbUpdateImovel implements UpdateImovel {
   constructor (private readonly updateImovelRepository: UpdateImovelRepository) {}
 
   async update (params: UpdateImovel.Params): Promise<UpdateImovel.Response> {
-    await this.updateImovelRepository.update(params)
-    return null
+    return await this.updateImovelRepository.update(params)
   }
 }
