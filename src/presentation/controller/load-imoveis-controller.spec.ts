@@ -1,5 +1,6 @@
 import { LoadImoveisController } from './load-imoveis-controller'
 import { LoadImoveis } from '../../entities/usecases/imoveis'
+import { noContent } from '../helpers/'
 
 import faker from 'faker'
 import { ok } from '../helpers'
@@ -55,5 +56,12 @@ describe('LoadAccounts Controller', () => {
     const { sut, loadImoveisSpy } = makeSut()
     const httpResponse = await sut.handle()
     expect(httpResponse).toEqual(ok(loadImoveisSpy.response))
+  })
+
+  test('Deve retornar 204 se LoadImoveis retornar vazio', async () => {
+    const { sut, loadImoveisSpy } = makeSut()
+    loadImoveisSpy.response = []
+    const httpResponse = await sut.handle()
+    expect(httpResponse).toEqual(noContent())
   })
 })
