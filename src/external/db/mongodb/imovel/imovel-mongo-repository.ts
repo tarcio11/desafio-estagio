@@ -62,6 +62,6 @@ export class ImovelMongoRepository implements RegisterImovelRepository, UpdateIm
       _id: new ObjectId(imovelId),
       userId: new ObjectId(userId)
     })
-    return result !== null
+    return result.value !== null
   }
 }
