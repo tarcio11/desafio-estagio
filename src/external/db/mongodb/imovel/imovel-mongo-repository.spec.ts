@@ -125,4 +125,26 @@ describe('UserMongoRepository', () => {
       expect(fakeImovel.disponivel).toBe(result.disponivel)
     })
   })
+
+  describe('delete()', () => {
+    test('Deve deletar um imóvel em caso de sucesso', async () => {
+      const userId = await mockAccountId()
+      const result = await imovelCollection.insertOne({
+        userId: new ObjectId(userId),
+        cep: faker.address.zipCode(),
+        complemento: faker.address.cityPrefix(),
+        numero: Number(faker.finance.amount(1, 3000, null)),
+        quantidade_de_quartos: faker.datatype.number(4),
+        valor_do_aluguel_em_reais: faker.finance.amount(600, 1500),
+        disponivel: faker.datatype.boolean()
+      })
+      const sut = makeSut()
+      await sut.delete(userId, result.ops[0]._id)
+      const imovelResult = await imovelCollection.findOne({
+        _id: result.ops[0]._id,
+        userId
+      })
+      expect(imovelResult).toBeFalsy()
+    })
+  })
 })
